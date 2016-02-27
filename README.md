@@ -1,7 +1,7 @@
 <snippet>
 ## POvMT
 Para Onde Vai meu Tempo?
-Projeto piloto de LES 2015.2
+Projeto piloto de LES(Laboratório de Engenharia de Software) 2015.2
 
 ## Contributing
 Andreza Raquel Monteiro de Queiroz (Stakeholder)
