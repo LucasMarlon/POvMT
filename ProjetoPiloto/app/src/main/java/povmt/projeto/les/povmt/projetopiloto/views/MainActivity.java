@@ -1,9 +1,11 @@
-package povmt.projeto.les.povmt.projetopiloto;
+package povmt.projeto.les.povmt.projetopiloto.views;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import povmt.projeto.les.povmt.projetopiloto.R;
 
 
 public class MainActivity extends ActionBarActivity {
