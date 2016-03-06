@@ -21,6 +21,7 @@
     <string name="login">Sign in with Google</string>
     <string name="title_activity_acompanhamento">Acompanhamento</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="nova_atividade">Regitrar atividade</string>
+
 
 </resources>
