@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.0"
 
     defaultConfig {
         applicationId "povmt.projeto.les.povmt.projetopiloto"
@@ -22,7 +22,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
     compile project(':library')
     compile files('src/main/java/povmt/projeto/les/povmt/projetopiloto/libs/mpandroidchartlibrary-2-1-6.jar')
 }

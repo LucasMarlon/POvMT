@@ -62,11 +62,9 @@ public class AcompanhamentoActivity extends ActionBarActivity {
                 // display msg when value selected
                 if (e == null)
                     return;
-
                 Toast.makeText(AcompanhamentoActivity.this,
                         xData[e.getXIndex()] + " = " + e.getVal() + "%", Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onNothingSelected() {
 
