@@ -12,7 +12,6 @@ import povmt.projeto.les.povmt.projetopiloto.utils.HttpUtils;
 
 public class NovaAtividadeActivity extends ActionBarActivity {
 
-
     private HttpUtils mHttp;
     private View mLoading;
 
