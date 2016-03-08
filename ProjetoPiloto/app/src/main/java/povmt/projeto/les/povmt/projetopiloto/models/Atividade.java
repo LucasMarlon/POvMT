@@ -16,6 +16,13 @@ public class Atividade implements Comparable<Atividade>{
     private int tempoInvestido;
     private Date data;
 
+    public  Atividade(String nome) throws Exception{
+        if(nome == null || nome.equals("")) {
+            throw new Exception("Nome invalido!");
+        }
+        this.nome = nome;
+    }
+
     public Atividade(String nome, int tempoInvestido, byte[] foto) throws Exception{
         if(nome == null || nome.equals("")) {
             throw new Exception("Nome inválido!");

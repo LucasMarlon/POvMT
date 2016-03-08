@@ -35,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
 
         mNavItems = new ArrayList<>();
         setmDrawer(mNavItems);
+
     }
 
     public void setmDrawer(ArrayList<NavItem> mNavItems){
@@ -52,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (position == 0){
+                if (position == 0) {
                     mDrawerLayout.closeDrawer(mDrawerPane);
                     setView(MainActivity.this, AcompanhamentoActivity.class);
                 }
@@ -86,5 +87,9 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void registrarAtividade(View view){
+        setView(MainActivity.this, NovaAtividadeActivity.class);
     }
 }

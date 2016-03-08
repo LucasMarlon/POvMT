@@ -1,6 +1,8 @@
 package povmt.projeto.les.povmt.projetopiloto.utils;
 
 import android.app.Activity;
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import okhttp3.MediaType;
