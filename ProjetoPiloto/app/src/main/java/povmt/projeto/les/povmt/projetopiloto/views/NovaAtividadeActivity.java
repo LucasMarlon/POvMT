@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,7 +50,7 @@ public class NovaAtividadeActivity extends ActionBarActivity {
         if (nome.equals("")) {
             new AlertDialog.Builder(NovaAtividadeActivity.this)
                     .setTitle("Erro")
-                    .setMessage("O nome da atividade não pode ser vazio.")
+                    .setMessage("O nome da atividade nï¿½o pode ser vazio.")
                     .setNeutralButton("OK", null)
                     .create()
                     .show();
@@ -61,8 +59,8 @@ public class NovaAtividadeActivity extends ActionBarActivity {
             JSONObject json = new JSONObject();
             try {
                 json.put("nomeAtividade", nome);
-                /*json.put("dataInicioSemana", "");
-                json.put("dataFimSemana", "");
+                json.put("dataInicioSemana", "08/03/2016");
+                /*json.put("dataFimSemana", "");
                 json.put("prioridade", "");
                 json.put("foto", "");
                 json.put("categoria", "");
@@ -112,7 +110,7 @@ public class NovaAtividadeActivity extends ActionBarActivity {
             public void onTimeout() {
                 new AlertDialog.Builder(NovaAtividadeActivity.this)
                     .setTitle("Erro")
-                    .setMessage("Conexão não disponível.")
+                    .setMessage("Conexï¿½o nï¿½o disponï¿½vel.")
                     .setNeutralButton("OK", null)
                     .create()
                     .show();

@@ -1,5 +1,6 @@
 package povmt.projeto.les.povmt.projetopiloto.views;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,11 +14,23 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import povmt.projeto.les.povmt.projetopiloto.R;
+import povmt.projeto.les.povmt.projetopiloto.adapters.ActivityAdapter;
 import povmt.projeto.les.povmt.projetopiloto.adapters.DrawerListAdapter;
+import povmt.projeto.les.povmt.projetopiloto.models.Atividade;
 import povmt.projeto.les.povmt.projetopiloto.models.NavItem;
+import povmt.projeto.les.povmt.projetopiloto.utils.HttpListener;
+import povmt.projeto.les.povmt.projetopiloto.utils.HttpUtils;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -27,6 +40,15 @@ public class MainActivity extends ActionBarActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private ArrayList<NavItem> mNavItems;
+    private ActivityAdapter adapter;
+    private ListView listViewAtividades;
+    private List<Atividade> listaAtividades;
+    private HttpUtils mHttp;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +58,110 @@ public class MainActivity extends ActionBarActivity {
         mNavItems = new ArrayList<>();
         setmDrawer(mNavItems);
 
+        listaAtividades = new ArrayList<>();
+
+        mHttp = new HttpUtils(this);
+        listViewAtividades = (ListView) findViewById(R.id.lv_activities);
+
+        String dataInicioSemana = ""; //TODO recuperar a data do início da semana
+        getListaAtividades(dataInicioSemana);
+
+        listViewAtividades.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Atividade atividade = (Atividade) adapter.getItem(position);
+                Intent intent = new Intent(MainActivity.this, AtividadeActivity.class);
+                intent.putExtra("ATIVIDADE", atividade);
+                startActivity(intent);
+            }
+        });
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    public void setmDrawer(ArrayList<NavItem> mNavItems){
-        mNavItems.add(new NavItem("Minha semana",  R.mipmap.ic_launcher));
-        mNavItems.add(new NavItem("Histórico",  R.mipmap.ic_launcher));
-        mNavItems.add(new NavItem("Sair",  R.mipmap.ic_launcher));
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//        Action viewAction = Action.newAction(
+//                Action.TYPE_VIEW, // TODO: choose an action type.
+//                "Main Page", // TODO: Define a title for the content shown.
+//                // TODO: If you have web page content that matches this app activity's content,
+//                // make sure this auto-generated web page URL is correct.
+//                // Otherwise, set the URL to null.
+//                Uri.parse("http://host/path"),
+//                // TODO: Make sure this auto-generated app deep link URI is correct.
+//                Uri.parse("android-app://povmt.projeto.les.povmt.projetopiloto.views/http/host/path")
+//        );
+//        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    public void getListaAtividades(final String dataInicioSemana) {
+        String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
+        JSONObject json = new JSONObject();
+        try {
+            json.put("dataInicioSemana", "08/03/2016");  //TODO PASSAR a String dataInicioSemana dada como parâmetro
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mHttp.post(url, json.toString(), new HttpListener() {
+            @Override
+            public void onSucess(JSONObject result) throws JSONException {
+                if (result.getInt("ok") == 1) {
+                    JSONArray jsonArray = result.getJSONArray("result");
+                    carregaLista(jsonArray);
+                }
+            }
+
+            @Override
+            public void onTimeout() {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Erro")
+                        .setMessage("Conex�o n�o dispon�vel.")
+                        .setNeutralButton("OK", null)
+                        .create()
+                        .show();
+            }
+        });
+
+    }
+
+
+    public void carregaLista(JSONArray jsonArray) throws JSONException {
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonAtividade = jsonArray.getJSONObject(i);
+
+            String nome = jsonAtividade.getString("nomeAtividade");
+            try {
+                Atividade atividade = new Atividade(nome);
+                listaAtividades.add(atividade);
+                adapter = new ActivityAdapter(this, listaAtividades);
+                listViewAtividades.setAdapter(adapter);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public void setView(Context context, Class classe) {
+        Intent it = new Intent();
+        it.setClass(context, classe);
+        startActivity(it);
+    }
+
+    public void setmDrawer(ArrayList<NavItem> mNavItems) {
+        mNavItems.add(new NavItem("Minha semana", R.mipmap.ic_launcher));
+        mNavItems.add(new NavItem("Histórico", R.mipmap.ic_launcher));
+        mNavItems.add(new NavItem("Sair", R.mipmap.ic_launcher));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mDrawerPane = (RelativeLayout) findViewById(R.id.drawerPane);
@@ -61,11 +181,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
     }
-    public void setView(Context context, Class classe){
-        Intent it = new Intent();
-        it.setClass(context, classe);
-        startActivity(it);
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,7 +205,28 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void registrarAtividade(View view){
+    public void registrarAtividade(View view) {
         setView(MainActivity.this, NovaAtividadeActivity.class);
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//        Action viewAction = Action.newAction(
+//                Action.TYPE_VIEW, // TODO: choose an action type.
+//                "Main Page", // TODO: Define a title for the content shown.
+//                // TODO: If you have web page content that matches this app activity's content,
+//                // make sure this auto-generated web page URL is correct.
+//                // Otherwise, set the URL to null.
+//                Uri.parse("http://host/path"),
+//                // TODO: Make sure this auto-generated app deep link URI is correct.
+//                Uri.parse("android-app://povmt.projeto.les.povmt.projetopiloto.views/http/host/path")
+//        );
+//       AppIndex.AppIndexApi.end(client, viewAction);
+//        client.disconnect();
     }
 }
