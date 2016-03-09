@@ -1,42 +1,48 @@
 # Arquivo de detalhamento das requisições POST para um banco de dados mongoDB
 
-// Cadastra uma atividade com tempo investido inicial igual a zero
+// Cadastra uma atividade com tempo investido inicial igual a zero:
+
 http://povmt-armq.rhcloud.com/cadastrarAtividade
-  	nomeAtividade;
+  	(nomeAtividade;
 	dataInicioSemana;
 	dataFimSemana;
 	prioridade;
 	foto;
 	categoria;
-	dataAtividade;
+	dataAtividade)
 
-// Incrementa o tempo insvestido da atividade cujo nome e data inicial da semana foram passados na requisição
+// Incrementa o tempo insvestido da atividade cujo nome e data inicial da semana foram passados na requisição:
+
 http://povmt-armq.rhcloud.com/incrementaTempoInvestido
-  	nomeAtividade;
+  	(nomeAtividade;
 	dataInicioSemana;
-	tempoInvestido;
+	tempoInvestido)
 	
-// Atualiza todos os campos da atividade cujo nome e data inicial da semana foram passados na requisição
+// Atualiza todos os campos da atividade cujo nome e data inicial da semana foram passados na requisição:
+
 http://povmt-armq.rhcloud.com/updateAtividade
- 	nomeAtividade;
+ 	(nomeAtividade;
 	dataInicioSemana;
 	dataFimSemana;
 	prioridade;
 	foto;
 	categoria;
 	dataAtividade;
-	tempoInvestido;
+	tempoInvestido)
 
-// Deleta a atividade cujo nome e data inicial da semana foram passados na requisição
+// Deleta a atividade cujo nome e data inicial da semana foram passados na requisição:
+
 http://povmt-armq.rhcloud.com/deleteAtividade
-  	nomeAtividade;
-	dataInicioSemana;
+  	(nomeAtividade;
+	dataInicioSemana)
 
-// Recupera as informações da atividade cujo nome e data inicial da semana foram passados na requisição
+// Recupera as informações da atividade cujo nome e data inicial da semana foram passados na requisição:
+
 http://povmt-armq.rhcloud.com/findAtividade
-  	nomeAtividade;
-	dataInicioSemana;
+  	(nomeAtividade;
+	dataInicioSemana)
 
-// Recupera as atividades cadastranas na semana com data inicial passada na requisição
+// Recupera as atividades cadastranas na semana com data inicial passada na requisição:
+
 http://povmt-armq.rhcloud.com/findAtividadesSemana
-	dataInicioSemana;
+	(dataInicioSemana)
