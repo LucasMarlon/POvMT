@@ -22,6 +22,9 @@
     <string name="title_activity_acompanhamento">Acompanhamento</string>
 
     <string name="nova_atividade">Regitrar atividade</string>
+    <string name="title_activity_historico">HistoricoActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 
 
 </resources>

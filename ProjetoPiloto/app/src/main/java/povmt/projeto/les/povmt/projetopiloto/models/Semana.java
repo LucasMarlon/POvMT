@@ -31,7 +31,8 @@ public class Semana {
     public int calculaTempoTotalInvestido(){
         int soma = 0;
         for(Atividade atividade: this.atividades){
-            soma += atividade.getTempo_investido();
+            if (atividade != null)
+                soma += atividade.getTempo_investido();
         }
         return soma;
     }
