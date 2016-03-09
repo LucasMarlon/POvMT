@@ -1,13 +1,9 @@
 package povmt.projeto.les.povmt.projetopiloto.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
-/**Classe para objetos do tipo Atividade, onde serao contidos, valores e metodos para o mesmo.
- * @author Marcos Nascimento
- * @version 1.00
- * @since Release 01 da aplicacao
- */
-public class Atividade implements Comparable<Atividade>{
+public class Atividade implements Comparable<Atividade>, Serializable{
 
     private String nome;
     private PRIORIDADE prioridade;
@@ -16,15 +12,20 @@ public class Atividade implements Comparable<Atividade>{
     private int tempoInvestido;
     private Date data;
 
-    public  Atividade(String nome) throws Exception{
+    public Atividade(String nome) throws Exception{
         if(nome == null || nome.equals("")) {
-            throw new Exception("Nome invalido!");
+            throw new Exception("Nome inválido!");
         }
         this.nome = nome;
         this.tempoInvestido = 0;
     }
 
-    public Atividade(String nome, int tempoInvestido) throws Exception{
+
+    public Atividade(String nome, int tempoInvestido) throws Exception {
+        new Atividade(nome, tempoInvestido, null);
+
+    }
+    public Atividade(String nome, int tempoInvestido, byte[] foto) throws Exception{
         if(nome == null || nome.equals("")) {
             throw new Exception("Nome inválido!");
         }

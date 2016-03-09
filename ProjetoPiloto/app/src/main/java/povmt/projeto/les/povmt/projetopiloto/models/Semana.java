@@ -22,6 +22,12 @@ public class Semana {
 
     }
 
+    public Semana (Date dataInicio, Date dataFim) {
+        atividades = new ArrayList<Atividade>();
+        this.dataInicio = dataInicio;
+        this.dataFim =  dataFim;
+    }
+
     public int calculaTempoTotalInvestido(){
         int soma = 0;
         for(Atividade atividade: this.atividades){

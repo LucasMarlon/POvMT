@@ -11,7 +11,15 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".views.MainActivity"
+<<<<<<< HEAD
             android:label="@string/title_activity_main" >
+=======
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+>>>>>>> a9b26deb6d9fb8bada7e5232a9e7fe986b027dfb
         </activity>
         <activity android:name=".views.AtividadeActivity" >
         </activity>
@@ -27,6 +35,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>
