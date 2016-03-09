@@ -2,7 +2,11 @@ package povmt.projeto.les.povmt.projetopiloto.views;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -22,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import povmt.projeto.les.povmt.projetopiloto.R;
@@ -32,10 +38,10 @@ import povmt.projeto.les.povmt.projetopiloto.models.NavItem;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpListener;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpUtils;
 
-
 public class MainActivity extends ActionBarActivity {
 
     private ListView mDrawerList;
+    private TextView no_recorde;
     private RelativeLayout mDrawerPane;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
@@ -44,11 +50,19 @@ public class MainActivity extends ActionBarActivity {
     private ListView listViewAtividades;
     private List<Atividade> listaAtividades;
     private HttpUtils mHttp;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+    private static final String PREFER_NAME = "Pref";
+    private static final String KEY_LISTA = "lista_atividades";
+    private HashMap<String, String> listaSharedPref;
+    int PRIVATE_MODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +71,12 @@ public class MainActivity extends ActionBarActivity {
 
         mNavItems = new ArrayList<>();
         setmDrawer(mNavItems);
+
+        no_recorde = (TextView) findViewById(R.id.tv_no_record);
+        pref = this.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
+        editor = pref.edit();
+
+        listaSharedPref = new HashMap<>();
 
         listaAtividades = new ArrayList<>();
 
@@ -101,7 +121,33 @@ public class MainActivity extends ActionBarActivity {
 //                Uri.parse("android-app://povmt.projeto.les.povmt.projetopiloto.views/http/host/path")
 //        );
 //        AppIndex.AppIndexApi.start(client, viewAction);
+
+       /* if (!isOnline()) {
+            String jsonArrayString = listaSharedPref.get(KEY_LISTA);
+            try {
+                JSONArray jsonArray = new JSONArray(jsonArrayString);
+                carregaLista(jsonArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }*/
+        /*if(!this.isOnline()){
+            String jsonArrayString = pref.getString(KEY_LISTA, "");
+            try {
+                JSONArray jsonArray = new JSONArray(jsonArrayString);
+                carregaLista(jsonArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }*/
     }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
 
     public void getListaAtividades(final String dataInicioSemana) {
         String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
@@ -112,24 +158,53 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
+
         mHttp.post(url, json.toString(), new HttpListener() {
             @Override
             public void onSucess(JSONObject result) throws JSONException {
+                no_recorde.setVisibility(View.GONE);
+                listViewAtividades.setVisibility(View.VISIBLE);
                 if (result.getInt("ok") == 1) {
                     JSONArray jsonArray = result.getJSONArray("result");
+                    editor.putString(KEY_LISTA, jsonArray.toString());
+                    editor.commit();
+                    listaSharedPref.put(KEY_LISTA, pref.getString(KEY_LISTA, null));
                     carregaLista(jsonArray);
                 }
             }
 
             @Override
             public void onTimeout() {
+
+                if (listaAtividades != null && listaAtividades.size() == 0) {
+                    no_recorde.setVisibility(View.VISIBLE);
+                    listViewAtividades.setVisibility(View.GONE);
+                } else {
+                    listViewAtividades.setVisibility(View.VISIBLE);
+                    no_recorde.setVisibility(View.GONE);
+                    String jsonArrayString = pref.getString(KEY_LISTA, "");
+                    try {
+                        JSONArray jsonArray = new JSONArray(jsonArrayString);
+                        carregaLista(jsonArray);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("Erro")
-                        .setMessage("Conex�o n�o dispon�vel.")
-                        .setNeutralButton("OK", null)
+                        .setMessage("Você não está conectado à internet!")
+                        .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // mLoading.setVisibility(View.GONE);
+                            }
+                        })
                         .create()
                         .show();
             }
+
+
         });
 
     }
@@ -138,7 +213,6 @@ public class MainActivity extends ActionBarActivity {
     public void carregaLista(JSONArray jsonArray) throws JSONException {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonAtividade = jsonArray.getJSONObject(i);
-
             String nome = jsonAtividade.getString("nomeAtividade");
             try {
                 Atividade atividade = new Atividade(nome);

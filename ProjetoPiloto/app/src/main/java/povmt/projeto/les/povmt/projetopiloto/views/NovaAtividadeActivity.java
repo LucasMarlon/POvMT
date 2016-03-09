@@ -25,6 +25,7 @@ public class NovaAtividadeActivity extends ActionBarActivity {
     private TextView dataFinal;
     private HttpUtils mHttp;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,39 +71,31 @@ public class NovaAtividadeActivity extends ActionBarActivity {
             }
             mHttp.post(url, json.toString(), new HttpListener() {
                 @Override
-                public void onSucess(JSONObject result) {
-                    Log.d("RESULT",result.toString());
-                    try {
-                        Log.d("RESULT",result.getInt("ok") + "");
-                        if (result.getInt("ok") == 0) {
-                            Log.d("NOVA_ACTIVITY", "ok = 0");
-                            new AlertDialog.Builder(NovaAtividadeActivity.this)
-                                    .setTitle("Erro")
-                                    .setMessage(result.getString("msg"))
-                                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            //  mLoading.setVisibility(View.GONE);
-                                        }
-                                    })
-                                    .create()
-                                    .show();
-                        } else {
-                            Log.d("NOVA_ACTIVITY", "ok = 1");
-                            new AlertDialog.Builder(NovaAtividadeActivity.this)
-                                    .setTitle("Sucesso")
-                                    .setMessage("Cadastro realizado com sucesso")
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            setView(NovaAtividadeActivity.this, MainActivity.class);
-                                        }
-                                    })
-                                    .create()
-                                    .show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                public void onSucess(JSONObject result) throws JSONException{
+                    if (result.getInt("ok") == 0) {
+                        new AlertDialog.Builder(NovaAtividadeActivity.this)
+                                .setTitle("Erro")
+                                .setMessage(result.getString("msg"))
+                                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        //  mLoading.setVisibility(View.GONE);
+                                    }
+                                })
+                                .create()
+                                .show();
+                    } else {
+                        new AlertDialog.Builder(NovaAtividadeActivity.this)
+                                .setTitle("Sucesso")
+                                .setMessage("Cadastro realizado com sucesso")
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        setView(NovaAtividadeActivity.this, MainActivity.class);
+                                    }
+                                })
+                                .create()
+                                .show();
                     }
                 }
 
