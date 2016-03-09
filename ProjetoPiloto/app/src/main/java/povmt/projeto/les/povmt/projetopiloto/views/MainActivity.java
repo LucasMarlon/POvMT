@@ -88,7 +88,16 @@ public class MainActivity extends ActionBarActivity {
         mHttp = new HttpUtils(this);
         listViewAtividades = (ListView) findViewById(R.id.lv_activities);
 
-        String dataInicioSemana = ""; //TODO recuperar a data do início da semana
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.SECOND);
+        cal.clear(Calendar.MILLISECOND);
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+        data = new Date();
+
+        Date dateSem = cal.getTime();
+        SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
+        String dataInicioSemana = format1.format(dateSem);
         getListaAtividades(dataInicioSemana);
 
         listViewAtividades.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -139,11 +148,10 @@ public class MainActivity extends ActionBarActivity {
         String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
         JSONObject json = new JSONObject();
         try {
-            json.put("dataInicioSemana", "08/03/2016");  //TODO PASSAR a String dataInicioSemana dada como parâmetro
+            json.put("dataInicioSemana", dataInicioSemana);  //TODO PASSAR a String dataInicioSemana dada como parâmetro
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         mHttp.post(url, json.toString(), new HttpListener() {
             @Override
