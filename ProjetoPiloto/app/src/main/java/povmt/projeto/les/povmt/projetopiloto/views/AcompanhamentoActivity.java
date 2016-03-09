@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -32,11 +33,16 @@ public class AcompanhamentoActivity extends ActionBarActivity {
     private HttpUtils mHttp;
     private Calendar cal = Calendar.getInstance();
     private Semana semanaAtual;
+    private HorizontalBarChart mChart;
+    private TextView tv_total_ti;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acompanhamento);
+
+        tv_total_ti = (TextView) findViewById(R.id.tv_total_ti);
+        mChart = (HorizontalBarChart) findViewById(R.id.chart);
         mHttp = new HttpUtils(this);
 
         cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
@@ -57,7 +63,7 @@ public class AcompanhamentoActivity extends ActionBarActivity {
         }
         mHttp.post(url, json.toString(), new HttpListener() {
             @Override
-            public void onSucess(JSONObject result) {
+            public void onSucess(final JSONObject result) {
                 try {
                     if (result.getInt("ok") == 0) {
                         new AlertDialog.Builder(AcompanhamentoActivity.this)
@@ -75,11 +81,12 @@ public class AcompanhamentoActivity extends ActionBarActivity {
                         JSONArray array = result.getJSONArray("result");
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject obj = array.getJSONObject(i);
-                            semanaAtual.adicionaAtividade(new Atividade(obj.getString("nomeAtividade"),
-                                    obj.getInt("tempoInvestido")));
+                            String nome = obj.getString("nomeAtividade");
+                            int tempoInvestido = obj.getInt("tempoInvestido");
+                            Atividade atv = new Atividade(nome, tempoInvestido);
+                            semanaAtual.adicionaAtividade(atv);
                         }
-
-
+                        criaGrafico(mChart);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -96,19 +103,16 @@ public class AcompanhamentoActivity extends ActionBarActivity {
                         .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                               // mLoading.setVisibility(View.GONE);
+                                // mLoading.setVisibility(View.GONE);
                             }
                         })
                         .create()
                         .show();
             }
         });
-
-        criaGrafico();
     }
 
-    private void criaGrafico() {
-
+    private void criaGrafico(HorizontalBarChart chart) {
         //Criando um array com as Proporções de TI
         ArrayList<BarEntry> entradas = new ArrayList<>();
         ArrayList<String> nomeDeAtividades = new ArrayList<String>();
@@ -121,13 +125,12 @@ public class AcompanhamentoActivity extends ActionBarActivity {
         }
 
         BarDataSet dataset = new BarDataSet(entradas, "Proporção de TI (%)");
-        HorizontalBarChart  chart = new HorizontalBarChart (this);
-        setContentView(chart);
 
         BarData data = new BarData(nomeDeAtividades, dataset);
         chart.setData(data);
-
-        chart.setDescription("Total de TI: ");
+        tv_total_ti.setText("Total de TI: " + semanaAtual.calculaTempoTotalInvestido() + "hs");
+        chart.setDescription("");
+        chart.invalidate();
     }
 
 
@@ -149,7 +152,6 @@ public class AcompanhamentoActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

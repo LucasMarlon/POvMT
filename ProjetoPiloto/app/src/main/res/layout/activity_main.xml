@@ -13,7 +13,7 @@
         android:gravity="center"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <FrameLayout
         android:id="@+id/mainContent"
