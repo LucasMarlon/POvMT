@@ -52,7 +52,7 @@ public class NovaAtividadeActivity extends ActionBarActivity {
         if (nome.equals("")) {
             new AlertDialog.Builder(NovaAtividadeActivity.this)
                     .setTitle("Erro")
-                    .setMessage("O nome da atividade não pode ser vazio.")
+                    .setMessage("O nome da atividade nao pode ser vazio.")
                     .setNeutralButton("OK", null)
                     .create()
                     .show();
@@ -112,7 +112,7 @@ public class NovaAtividadeActivity extends ActionBarActivity {
             public void onTimeout() {
                 new AlertDialog.Builder(NovaAtividadeActivity.this)
                     .setTitle("Erro")
-                    .setMessage("Conexão não disponível.")
+                    .setMessage("Conexï¿½o nï¿½o disponï¿½vel.")
                     .setNeutralButton("OK", null)
                     .create()
                     .show();

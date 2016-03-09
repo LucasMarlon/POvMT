@@ -13,11 +13,12 @@ import java.util.List;
 public class Semana {
 
     private Date dataInicio;
-    private Date dataFim;
     private List<Atividade> atividades;
+    private Date dataFim;
 
-    public Semana(){
+    public Semana(Date dataInicio){
         atividades = new ArrayList<Atividade>();
+        this.dataInicio = dataInicio;
 
     }
 
@@ -29,15 +30,41 @@ public class Semana {
         return soma;
     }
 
-    public float calculaProporcao(Atividade atividade) {
+    public float calculaProporcaoTempoInvestido(Atividade atividade) {
         if(this.calculaTempoTotalInvestido() == 0){
             return 0;
         }
         return atividade.getTempo_investido()/this.calculaTempoTotalInvestido();
     }
 
-    public List<Atividade> ordenarMaiorTempoInvestido(){
+    public void adicionaAtividade(Atividade atividade) {
+        atividades.add(atividade);
+    }
+
+    public List<Atividade> getAtividadesOrdenadas(){
         Collections.sort(atividades);
         return atividades;
     }
+
+    public Date getDataInicio() {
+        return dataInicio;
+    }
+
+    public Date getDataFim() {
+        return dataFim;
+    }
+
+    public void setDataInicio(Date dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public void setDataFim(Date dataFim) {
+        this.dataFim = dataFim;
+    }
+
+    public List<Atividade> getAtividades() {
+        return atividades;
+    }
+
+
 }

@@ -21,9 +21,10 @@ public class Atividade implements Comparable<Atividade>{
             throw new Exception("Nome invalido!");
         }
         this.nome = nome;
+        this.tempoInvestido = 0;
     }
 
-    public Atividade(String nome, int tempoInvestido, byte[] foto) throws Exception{
+    public Atividade(String nome, int tempoInvestido) throws Exception{
         if(nome == null || nome.equals("")) {
             throw new Exception("Nome inválido!");
         }
@@ -31,12 +32,9 @@ public class Atividade implements Comparable<Atividade>{
         if(tempoInvestido < 0){
             throw new Exception("Tempo investido inválido.");
         }
-        if (foto == null) {
-            throw new Exception("Foto inválida.");
-        }
+
         this.nome = nome;
         this.tempoInvestido = tempoInvestido;
-        this.foto = foto;
         this.data = new Date();
     }
 
@@ -120,9 +118,9 @@ public class Atividade implements Comparable<Atividade>{
 
     @Override
     public int compareTo(Atividade atividade) {
-        if(atividade.getTempo_investido() < this.tempoInvestido) {
+        if(this.tempoInvestido < atividade.getTempo_investido()) {
             return -1;
-        } else if (atividade.getTempo_investido() > this.tempoInvestido) {
+        } else if (this.tempoInvestido > atividade.getTempo_investido()) {
             return 1;
         }
         return 0;
