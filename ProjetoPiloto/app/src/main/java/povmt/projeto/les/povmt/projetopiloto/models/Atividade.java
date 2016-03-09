@@ -12,7 +12,12 @@ public class Atividade implements Comparable<Atividade>, Serializable{
     private int tempoInvestido;
     private Date data;
 
-    public Atividade(String nome) throws Exception{
+
+    public Atividade(String nome, Date dataAtual) throws Exception{
+        this(nome, 0, null);
+        this.data = dataAtual;
+    }
+    public Atividade(String nome ) throws Exception{
         this(nome, 0, null);
     }
 

@@ -15,6 +15,10 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import povmt.projeto.les.povmt.projetopiloto.R;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpListener;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpUtils;
@@ -24,6 +28,8 @@ public class NovaAtividadeActivity extends ActionBarActivity {
     private TextView dataInicial;
     private TextView dataFinal;
     private HttpUtils mHttp;
+    private Calendar cal = Calendar.getInstance();
+    Date data;
 
 
     @Override
@@ -41,13 +47,26 @@ public class NovaAtividadeActivity extends ActionBarActivity {
         registraAtividade.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+                cal.clear(Calendar.MINUTE);
+                cal.clear(Calendar.SECOND);
+                cal.clear(Calendar.MILLISECOND);
+                cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+                data = new Date();
+
+                Date dateSem = cal.getTime();
                 String nome = nomeAtividade.getText().toString();
-                registraAtividade(nome);
+                SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
+                String dataSemana = format1.format(dateSem);
+                String dataAtual = format1.format(data.getTime());
+                registraAtividade(nome, dataSemana, dataAtual);
             }
         });
+
+
     }
 
-    private void registraAtividade(final String nome) {
+    private void registraAtividade(final String nome, final String dataSemana, final String dataAtual) {
         if (nome.equals("")) {
             new AlertDialog.Builder(NovaAtividadeActivity.this)
                     .setTitle("Erro")
@@ -60,12 +79,12 @@ public class NovaAtividadeActivity extends ActionBarActivity {
             JSONObject json = new JSONObject();
             try {
                 json.put("nomeAtividade", nome);
-                json.put("dataInicioSemana", "08/03/2016");
-                /*json.put("dataFimSemana", "");
+                json.put("dataInicioSemana", dataSemana);
+                json.put("dataFimSemana", "");
                 json.put("prioridade", "");
                 json.put("foto", "");
                 json.put("categoria", "");
-                json.put("dataAtividade", "");*/
+                json.put("dataAtividade", dataAtual);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

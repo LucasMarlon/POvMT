@@ -2,15 +2,16 @@ package povmt.projeto.les.povmt.projetopiloto.views;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +27,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,7 +54,8 @@ public class MainActivity extends ActionBarActivity {
     private ListView listViewAtividades;
     private List<Atividade> listaAtividades;
     private HttpUtils mHttp;
-
+    private Calendar cal = Calendar.getInstance();
+    Date data;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -61,8 +66,8 @@ public class MainActivity extends ActionBarActivity {
     SharedPreferences.Editor editor;
     private static final String PREFER_NAME = "Pref";
     private static final String KEY_LISTA = "lista_atividades";
-    private HashMap<String, String> listaSharedPref;
     int PRIVATE_MODE = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +81,7 @@ public class MainActivity extends ActionBarActivity {
         pref = this.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = pref.edit();
 
-        listaSharedPref = new HashMap<>();
+
 
         listaAtividades = new ArrayList<>();
 
@@ -121,25 +126,6 @@ public class MainActivity extends ActionBarActivity {
 //                Uri.parse("android-app://povmt.projeto.les.povmt.projetopiloto.views/http/host/path")
 //        );
 //        AppIndex.AppIndexApi.start(client, viewAction);
-
-       /* if (!isOnline()) {
-            String jsonArrayString = listaSharedPref.get(KEY_LISTA);
-            try {
-                JSONArray jsonArray = new JSONArray(jsonArrayString);
-                carregaLista(jsonArray);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }*/
-        /*if(!this.isOnline()){
-            String jsonArrayString = pref.getString(KEY_LISTA, "");
-            try {
-                JSONArray jsonArray = new JSONArray(jsonArrayString);
-                carregaLista(jsonArray);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }*/
     }
 
     public boolean isOnline() {
@@ -168,7 +154,6 @@ public class MainActivity extends ActionBarActivity {
                     JSONArray jsonArray = result.getJSONArray("result");
                     editor.putString(KEY_LISTA, jsonArray.toString());
                     editor.commit();
-                    listaSharedPref.put(KEY_LISTA, pref.getString(KEY_LISTA, null));
                     carregaLista(jsonArray);
                 }
             }
@@ -190,21 +175,7 @@ public class MainActivity extends ActionBarActivity {
                         e.printStackTrace();
                     }
                 }
-
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Erro")
-                        .setMessage("Você não está conectado à internet!")
-                        .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // mLoading.setVisibility(View.GONE);
-                            }
-                        })
-                        .create()
-                        .show();
             }
-
-
         });
 
     }
