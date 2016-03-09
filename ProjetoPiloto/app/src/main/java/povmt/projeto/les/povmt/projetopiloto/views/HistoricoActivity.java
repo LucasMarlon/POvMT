@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -15,17 +16,22 @@ import java.util.List;
 
 import povmt.projeto.les.povmt.projetopiloto.R;
 import povmt.projeto.les.povmt.projetopiloto.models.Atividade;
+import povmt.projeto.les.povmt.projetopiloto.models.Semana;
 
 public class HistoricoActivity extends ActionBarActivity {
 
     private HorizontalBarChart mChart1;
     private HorizontalBarChart mChart2;
     private HorizontalBarChart mChart3;
+    private Semana semanaAtual;
+    private TextView tv_total_ti1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historico);
+
+        tv_total_ti1 = (TextView) findViewById(R.id.tv_total_ti1);
 
         mChart1 = (HorizontalBarChart) findViewById(R.id.chart1);
         mChart2 = (HorizontalBarChart) findViewById(R.id.chart2);
@@ -37,24 +43,24 @@ public class HistoricoActivity extends ActionBarActivity {
     }
 
     private void preencheGrafico(HorizontalBarChart chart) {
-
         //Criando um array com as Proporções de TI
         ArrayList<BarEntry> entradas = new ArrayList<>();
         ArrayList<String> nomeDeAtividades = new ArrayList<String>();
 
-        // Substituir pelo dado real
-        for (int i = 0; i < 10; i++) {
+        List<Atividade> atividadesSemanaAtual = semanaAtual.getAtividadesOrdenadas();
 
-            entradas.add(new BarEntry(0.1f, i));
-            nomeDeAtividades.add("Atividade " + i);
+        for (int i = atividadesSemanaAtual.size()-1; i >= 0; i--) {
+            entradas.add(new BarEntry(semanaAtual.calculaProporcaoTempoInvestido(atividadesSemanaAtual.get(i)), i));
+            nomeDeAtividades.add(atividadesSemanaAtual.get(i).getNome());
         }
-        //--------------------------------
+
         BarDataSet dataset = new BarDataSet(entradas, "Proporção de TI (%)");
 
         BarData data = new BarData(nomeDeAtividades, dataset);
         chart.setData(data);
-
+        tv_total_ti1.setText("Total de TI: " + semanaAtual.calculaTempoTotalInvestido() + "hs");
         chart.setDescription("");
+        chart.invalidate();
 
     }
 

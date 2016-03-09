@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -18,6 +19,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -52,12 +57,20 @@ public class AcompanhamentoActivity extends ActionBarActivity {
 
         cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
 
-        semanaAtual = new Semana(cal.getTime());
+
+        Date time = cal.getTime();
+        SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
+        String dateFormat = format1.format(time);
+        System.out.println("DATA STRING" + dateFormat);
+
+        semanaAtual = new Semana(time);
+        System.out.println("data inicial " + semanaAtual.getDataInicio());
+
 
         String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
         JSONObject json = new JSONObject();
         try {
-            json.put("dataInicioSemana", "08/03/2016");
+            json.put("dataInicioSemana", dateFormat);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -86,7 +99,22 @@ public class AcompanhamentoActivity extends ActionBarActivity {
                             Atividade atv = new Atividade(nome, tempoInvestido);
                             semanaAtual.adicionaAtividade(atv);
                         }
-                        criaGrafico(mChart);
+                        if(array.length() != 0) {
+                            criaGrafico(mChart);
+                        } else {
+                            new AlertDialog.Builder(AcompanhamentoActivity.this)
+                                    .setTitle("ACOMPANHAMENTO")
+                                    .setMessage("Nenhuma atividade registrada esta semana.")
+                                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            // mLoading.setVisibility(View.GONE);
+                                        }
+                                    })
+                                    .create()
+                                    .show();
+                        }
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -121,6 +149,9 @@ public class AcompanhamentoActivity extends ActionBarActivity {
 
         for (int i = atividadesSemanaAtual.size()-1; i >= 0; i--) {
             entradas.add(new BarEntry(semanaAtual.calculaProporcaoTempoInvestido(atividadesSemanaAtual.get(i)), i));
+        }
+
+        for (int i = 0; i < atividadesSemanaAtual.size(); i++) {
             nomeDeAtividades.add(atividadesSemanaAtual.get(i).getNome());
         }
 
