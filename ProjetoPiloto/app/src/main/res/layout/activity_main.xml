@@ -4,6 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/tv_no_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_record"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
 
     <FrameLayout
         android:id="@+id/mainContent"
@@ -29,6 +39,7 @@
             android:layout_gravity="center_horizontal|bottom"
             android:text="@string/nova_atividade"
             android:textSize="20sp"
+            android:fontFamily="Arial"
             android:textStyle="bold"
             android:textColor="@color/white"
             android:background="@color/teal"

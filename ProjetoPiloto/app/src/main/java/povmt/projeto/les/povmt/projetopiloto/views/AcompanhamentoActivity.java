@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,6 +66,8 @@ public class AcompanhamentoActivity extends ActionBarActivity {
 
         semanaAtual = new Semana(time);
         System.out.println("data inicial " + semanaAtual.getDataInicio());
+
+
 
 
         String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
