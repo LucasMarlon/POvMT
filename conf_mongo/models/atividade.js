@@ -17,7 +17,7 @@ module.exports = function(mongodb, app, atividadeCollection) {
 				res.send('{ "ok" : 0, "msg" : "' + err + '" }');
 			} else {
 				if(array.length > 0) {
-					res.send("ATIVIDADE EXISTENTE");
+					res.send('{ "ok" : 0, "msg" : "ATIVIDADE EXISTENTE" }');
 				} else {
 					atividadeCollection.insert({
 						nomeAtividade: nomeAtividade,
@@ -55,7 +55,7 @@ module.exports = function(mongodb, app, atividadeCollection) {
 				res.send('{ "ok" : 0, "msg" : "' + err + '" }');
 			} else {
 				if(array.length == 0) {
-					res.send("ATIVIDADE INEXISTENTE");
+					res.send('{ "ok" : 0, "msg" : "ATIVIDADE INEXISTENTE" }');
 				} else {
 					atividadeCollection.update({
 						nomeAtividade:nomeAtividade, 
@@ -94,8 +94,8 @@ module.exports = function(mongodb, app, atividadeCollection) {
 			if(err) {
 				res.send('{ "ok" : 0, "msg" : "' + err + '" }');
 			} else {
-				if(array.length != 0) {
-					res.send("ATIVIDADE INEXISTENTE");
+				if(array.length == 0) {
+					res.send('{ "ok" : 0, "msg" : "ATIVIDADE INEXISTENTE" }');
 				} else {
 					atividadeCollection.update({
 						nomeAtividade:nomeAtividade, 
@@ -137,7 +137,7 @@ module.exports = function(mongodb, app, atividadeCollection) {
 				res.send('{ "ok" : 0, "msg" : "' + err + '" }');
 			} else {
 				if(array.length == 0) {
-					res.send("ATIVIDADE INEXISTENTE");
+					res.send('{ "ok" : 0, "msg" : "ATIVIDADE INEXISTENTE" }');
 				} else {
 					atividadeCollection.remove({
 						nomeAtividade: nomeAtividade,
@@ -185,7 +185,7 @@ module.exports = function(mongodb, app, atividadeCollection) {
 			if(err) {
 				res.send('{ "ok" : 0, "msg" : "' + err + '" }');
 			} else {
-				res.send(array);		
+				res.json({ok : 1, result : array});       		
 			}
 		});	
 		
