@@ -4,12 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -20,8 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,21 +51,13 @@ public class AcompanhamentoActivity extends ActionBarActivity {
         cal.clear(Calendar.MINUTE);
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
-
         cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-
 
         Date time = cal.getTime();
         SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
         String dateFormat = format1.format(time);
-        System.out.println("DATA STRING" + dateFormat);
 
         semanaAtual = new Semana(time);
-        System.out.println("data inicial " + semanaAtual.getDataInicio());
-
-
-
-
         String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
         JSONObject json = new JSONObject();
         try {
@@ -103,7 +91,8 @@ public class AcompanhamentoActivity extends ActionBarActivity {
                             semanaAtual.adicionaAtividade(atv);
                         }
                         if(array.length() != 0) {
-                            criaGrafico(mChart);
+                            preencheGrafico(mChart);
+                            mChart.setVisibility(View.VISIBLE);
                         } else {
                             new AlertDialog.Builder(AcompanhamentoActivity.this)
                                     .setTitle("ACOMPANHAMENTO")
@@ -111,7 +100,7 @@ public class AcompanhamentoActivity extends ActionBarActivity {
                                     .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                            // mLoading.setVisibility(View.GONE);
+
                                         }
                                     })
                                     .create()
@@ -134,7 +123,7 @@ public class AcompanhamentoActivity extends ActionBarActivity {
                         .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // mLoading.setVisibility(View.GONE);
+
                             }
                         })
                         .create()
@@ -143,7 +132,7 @@ public class AcompanhamentoActivity extends ActionBarActivity {
         });
     }
 
-    private void criaGrafico(HorizontalBarChart chart) {
+    private void preencheGrafico(HorizontalBarChart chart) {
         //Criando um array com as Proporções de TI
         ArrayList<BarEntry> entradas = new ArrayList<>();
         ArrayList<String> nomeDeAtividades = new ArrayList<String>();
