@@ -25,12 +25,9 @@ import povmt.projeto.les.povmt.projetopiloto.utils.HttpUtils;
 
 public class NovaAtividadeActivity extends ActionBarActivity {
 
-    private TextView dataInicial;
-    private TextView dataFinal;
     private HttpUtils mHttp;
     private Calendar cal = Calendar.getInstance();
     Date data;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +38,6 @@ public class NovaAtividadeActivity extends ActionBarActivity {
 
         final EditText nomeAtividade = (EditText) findViewById(R.id.et_nome);
         final Button registraAtividade =  (Button) findViewById(R.id.bt_add_atividade);
-        dataInicial = (TextView) findViewById(R.id.tv_data_inicio);
-        dataFinal = (TextView) findViewById(R.id.tv_data_final);
 
         registraAtividade.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +65,7 @@ public class NovaAtividadeActivity extends ActionBarActivity {
         if (nome.equals("")) {
             new AlertDialog.Builder(NovaAtividadeActivity.this)
                     .setTitle("Erro")
-                    .setMessage("O nome da atividade n�o pode ser vazio.")
+                    .setMessage("O nome da atividade não pode ser vazio.")
                     .setNeutralButton("OK", null)
                     .create()
                     .show();
@@ -106,7 +101,7 @@ public class NovaAtividadeActivity extends ActionBarActivity {
                     } else {
                         new AlertDialog.Builder(NovaAtividadeActivity.this)
                                 .setTitle("Sucesso")
-                                .setMessage("Cadastro realizado com sucesso")
+                                .setMessage("Atividade registrada com sucesso")
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -122,7 +117,7 @@ public class NovaAtividadeActivity extends ActionBarActivity {
             public void onTimeout() {
                 new AlertDialog.Builder(NovaAtividadeActivity.this)
                     .setTitle("Erro")
-                    .setMessage("Conex�o n�o dispon�vel.")
+                    .setMessage("Conexão não disponível.")
                     .setNeutralButton("OK", null)
                     .create()
                     .show();

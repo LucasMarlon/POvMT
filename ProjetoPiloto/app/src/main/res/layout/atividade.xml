@@ -36,12 +36,12 @@
             android:layout_marginEnd="10dp"
             android:maxLength="3"/>
 
-
         <TextView
             android:id="@+id/tv_unit_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/horas" />
+
     </LinearLayout>
 
     <Button
@@ -56,6 +56,5 @@
         android:background="@color/teal"
         android:layout_gravity="left"
         />
-
 
 </LinearLayout>

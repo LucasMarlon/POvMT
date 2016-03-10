@@ -56,18 +56,6 @@ public class Atividade implements Comparable<Atividade>, Serializable{
         return nome;
     }
 
-    public int getTempo_investido() {
-        return tempoInvestido;
-    }
-
-    public void setTempoInvestido(int tempoInvestido) throws Exception {
-        if (tempoInvestido < 0) {
-            throw new Exception("Tempo não pode ser negativo.");
-        } else {
-            this.tempoInvestido = tempoInvestido;
-        }
-    }
-
     public PRIORIDADE getPrioridade() {
         return prioridade;
     }
@@ -119,9 +107,9 @@ public class Atividade implements Comparable<Atividade>, Serializable{
 
     @Override
     public int compareTo(Atividade atividade) {
-        if(this.tempoInvestido < atividade.getTempo_investido()) {
+        if(this.tempoInvestido < atividade.getTempoInvestido()) {
             return -1;
-        } else if (this.tempoInvestido > atividade.getTempo_investido()) {
+        } else if (this.tempoInvestido > atividade.getTempoInvestido()) {
             return 1;
         }
         return 0;

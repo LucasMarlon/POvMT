@@ -27,12 +27,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import povmt.projeto.les.povmt.projetopiloto.R;
 import povmt.projeto.les.povmt.projetopiloto.adapters.ActivityAdapter;
@@ -56,6 +59,7 @@ public class MainActivity extends ActionBarActivity {
     private HttpUtils mHttp;
     private Calendar cal = Calendar.getInstance();
     Date data;
+    Date dataAtividade;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -80,8 +84,6 @@ public class MainActivity extends ActionBarActivity {
         no_recorde = (TextView) findViewById(R.id.tv_no_record);
         pref = this.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = pref.edit();
-
-
 
         listaAtividades = new ArrayList<>();
 
@@ -193,8 +195,19 @@ public class MainActivity extends ActionBarActivity {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonAtividade = jsonArray.getJSONObject(i);
             String nome = jsonAtividade.getString("nomeAtividade");
+            String data = jsonAtividade.getString("dataAtividade");
+
+            DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            // SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            dataAtividade = new Date();
             try {
-                Atividade atividade = new Atividade(nome);
+                dataAtividade = format.parse(data);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                Atividade atividade = new Atividade(nome, dataAtividade);
                 listaAtividades.add(atividade);
                 adapter = new ActivityAdapter(this, listaAtividades);
                 listViewAtividades.setAdapter(adapter);
