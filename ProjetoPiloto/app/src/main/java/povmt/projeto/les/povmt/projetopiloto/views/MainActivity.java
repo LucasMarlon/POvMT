@@ -230,6 +230,10 @@ public class MainActivity extends ActionBarActivity {
                     mDrawerLayout.closeDrawer(mDrawerPane);
                     setView(MainActivity.this, AcompanhamentoActivity.class);
                 }
+                if (position == 1) {
+                    mDrawerLayout.closeDrawer(mDrawerPane);
+                    setView(MainActivity.this, HistoricoActivity.class);
+                }
 
             }
         });

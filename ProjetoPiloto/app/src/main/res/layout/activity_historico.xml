@@ -20,7 +20,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/tv_titulo1"
+                    android:gravity="center"
+                    android:layout_alignTop="@+id/chart1"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SEMANA ATUAL"
+                    />
+
                 <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:visibility="invisible"
                     android:id="@+id/chart1"
                     android:layout_width="match_parent"
                     android:layout_height="300dp" />
@@ -43,7 +55,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/tv_titulo2"
+                    android:layout_alignTop="@+id/chart2"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SEMANA PASSADA"
+                    />
+
                 <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:visibility="invisible"
                     android:id="@+id/chart2"
                     android:layout_width="match_parent"
                     android:layout_height="300dp" />
@@ -51,6 +75,7 @@
                 <TextView
                     android:id="@+id/tv_total_ti2"
                     android:layout_alignBottom="@+id/chart2"
+                    android:gravity="center"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="200dp"
                     android:textStyle="bold"
@@ -66,7 +91,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/tv_titulo3"
+                    android:layout_alignTop="@+id/chart3"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SEMANA RETRASADA"
+                    />
+
                 <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:visibility="invisible"
                     android:id="@+id/chart3"
                     android:layout_width="match_parent"
                     android:layout_height="300dp" />

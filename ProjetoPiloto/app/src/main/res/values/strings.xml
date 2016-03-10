@@ -19,10 +19,10 @@
     <!-- Login Activity -->
     <string name="title_activity_login">Faça seu login</string>
     <string name="login">Sign in with Google</string>
-    <string name="title_activity_acompanhamento">Acompanhamento</string>
+    <string name="title_activity_acompanhamento">Acompanhamento semanal</string>
 
     <string name="nova_atividade">Registrar atividade</string>
-    <string name="title_activity_historico">HistoricoActivity</string>
+    <string name="title_activity_historico">Histórico</string>
     <string name="hello_world">Hello world!</string>
 
 
