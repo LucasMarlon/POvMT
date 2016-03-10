@@ -1,17 +1,14 @@
 package povmt.projeto.les.povmt.projetopiloto.views;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import povmt.projeto.les.povmt.projetopiloto.R;
@@ -82,8 +78,6 @@ public class MainActivity extends ActionBarActivity {
         editor = pref.edit();
 
 
-
-        listaAtividades = new ArrayList<>();
 
         mHttp = new HttpUtils(this);
         listViewAtividades = (ListView) findViewById(R.id.lv_activities);
@@ -190,6 +184,7 @@ public class MainActivity extends ActionBarActivity {
 
 
     public void carregaLista(JSONArray jsonArray) throws JSONException {
+        listaAtividades = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonAtividade = jsonArray.getJSONObject(i);
             String nome = jsonAtividade.getString("nomeAtividade");
