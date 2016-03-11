@@ -1,5 +1,7 @@
 package povmt.projeto.les.povmt.projetopiloto.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,7 +34,7 @@ public class Semana {
         int soma = 0;
         for(Atividade atividade: this.atividades){
             if (atividade != null)
-                soma += atividade.getTempo_investido();
+                soma += atividade.getTempoInvestido();
         }
         return soma;
     }
@@ -41,7 +43,7 @@ public class Semana {
         if(this.calculaTempoTotalInvestido() == 0){
             return 0;
         }
-        return atividade.getTempo_investido()/this.calculaTempoTotalInvestido();
+        return (atividade.getTempoInvestido()/(float)calculaTempoTotalInvestido()) * 100;
     }
 
     public void adicionaAtividade(Atividade atividade) {
