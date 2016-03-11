@@ -90,12 +90,7 @@ public class NovaAtividadeActivity extends ActionBarActivity {
                         new AlertDialog.Builder(NovaAtividadeActivity.this)
                                 .setTitle("Erro")
                                 .setMessage(result.getString("msg"))
-                                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        //  mLoading.setVisibility(View.GONE);
-                                    }
-                                })
+                                .setNeutralButton("OK", null)
                                 .create()
                                 .show();
                     } else {
@@ -117,7 +112,7 @@ public class NovaAtividadeActivity extends ActionBarActivity {
             public void onTimeout() {
                 new AlertDialog.Builder(NovaAtividadeActivity.this)
                     .setTitle("Erro")
-                    .setMessage("Conexão não disponível.")
+                    .setMessage("Conexão não disponível")
                     .setNeutralButton("OK", null)
                     .create()
                     .show();
