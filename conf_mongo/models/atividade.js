@@ -33,7 +33,7 @@ module.exports = function(mongodb, app, atividadeCollection) {
 						if(err){
 							res.send('{ "ok" : 0, "msg" : "' + err + '" }');
 						} else {
-							res.send('"ok": 1');	
+							res.send('{"ok": 1}');	
 						}
 					});
 				}				
@@ -65,9 +65,9 @@ module.exports = function(mongodb, app, atividadeCollection) {
 					
 					},function(err, doc){
 						if(err){
-							res.send('{ "ok" : 0, "msg" : "' + err + '" }');
+							res.send('{"ok" : 0, "msg" : "' + err + '"}');
 						} else {
-							res.send('"ok": 1');	
+							res.send('{"ok": 1}');	
 						}
 					});
 				}				
