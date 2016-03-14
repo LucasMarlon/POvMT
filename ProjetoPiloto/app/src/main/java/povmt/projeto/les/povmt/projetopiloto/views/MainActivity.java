@@ -2,13 +2,13 @@ package povmt.projeto.les.povmt.projetopiloto.views;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,9 +16,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,12 +28,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import povmt.projeto.les.povmt.projetopiloto.R;
 import povmt.projeto.les.povmt.projetopiloto.adapters.ActivityAdapter;
 import povmt.projeto.les.povmt.projetopiloto.adapters.DrawerListAdapter;
 import povmt.projeto.les.povmt.projetopiloto.models.Atividade;
+import povmt.projeto.les.povmt.projetopiloto.models.MySharedPreferences;
 import povmt.projeto.les.povmt.projetopiloto.models.NavItem;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpListener;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpUtils;
@@ -56,18 +53,8 @@ public class MainActivity extends ActionBarActivity {
     private Calendar cal = Calendar.getInstance();
     Date data;
     Date dataAtividade;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
-
-    SharedPreferences pref;
-    SharedPreferences.Editor editor;
-    private static final String PREFER_NAME = "Pref";
-    private static final String KEY_LISTA = "lista_atividades";
-    int PRIVATE_MODE = 0;
-
+    MySharedPreferences mySharedPreferences;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +65,8 @@ public class MainActivity extends ActionBarActivity {
         setmDrawer(mNavItems);
 
         no_recorde = (TextView) findViewById(R.id.tv_no_record);
-        pref = this.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
-        editor = pref.edit();
+
+        mySharedPreferences = new MySharedPreferences(getApplicationContext());
 
         mHttp = new HttpUtils(this);
         listViewAtividades = (ListView) findViewById(R.id.lv_activities);
@@ -106,31 +93,13 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        context = this;
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-//        Action viewAction = Action.newAction(
-//                Action.TYPE_VIEW, // TODO: choose an action type.
-//                "Main Page", // TODO: Define a title for the content shown.
-//                // TODO: If you have web page content that matches this app activity's content,
-//                // make sure this auto-generated web page URL is correct.
-//                // Otherwise, set the URL to null.
-//                Uri.parse("http://host/path"),
-//                // TODO: Make sure this auto-generated app deep link URI is correct.
-//                Uri.parse("android-app://povmt.projeto.les.povmt.projetopiloto.views/http/host/path")
-//        );
-//        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
     public boolean isOnline() {
@@ -142,7 +111,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void getListaAtividades(final String dataInicioSemana) {
         String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
-        JSONObject json = new JSONObject();
+        final JSONObject json = new JSONObject();
         try {
             json.put("dataInicioSemana", dataInicioSemana);  //TODO PASSAR a String dataInicioSemana dada como parâmetro
         } catch (JSONException e) {
@@ -156,28 +125,37 @@ public class MainActivity extends ActionBarActivity {
                 listViewAtividades.setVisibility(View.VISIBLE);
                 if (result.getInt("ok") == 1) {
                     JSONArray jsonArray = result.getJSONArray("result");
-                    editor.putString(KEY_LISTA, jsonArray.toString());
-                    editor.commit();
+                    mySharedPreferences.salvaListaAtividades(jsonArray.toString());
                     carregaLista(jsonArray);
+                    if (listaAtividades.size() == 0) {
+                        no_recorde.setVisibility(View.VISIBLE);
+                        listViewAtividades.setVisibility(View.GONE);
+                    }
                 }
             }
 
             @Override
             public void onTimeout() {
-
-                if (listaAtividades != null && listaAtividades.size() == 0) {
+                if (mySharedPreferences.getListAtividades() != null) {
+                    listaAtividades = mySharedPreferences.getListAtividades();
+                }
+                if (listaAtividades != null && listaAtividades.size() == 0 || listaAtividades == null) {
+                    Log.d("MAIN", "Tamanho da lista é zero");
                     no_recorde.setVisibility(View.VISIBLE);
                     listViewAtividades.setVisibility(View.GONE);
                 } else {
-                    listViewAtividades.setVisibility(View.VISIBLE);
-                    no_recorde.setVisibility(View.GONE);
-                    String jsonArrayString = pref.getString(KEY_LISTA, "");
-                    try {
-                        JSONArray jsonArray = new JSONArray(jsonArrayString);
-                        carregaLista(jsonArray);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    adapter = new ActivityAdapter(context, listaAtividades);
+                    listViewAtividades.setAdapter(adapter);
+//                    Log.d("MAIN", "Tamanho da lista é maior que zero");
+//                    listViewAtividades.setVisibility(View.VISIBLE);
+//                    no_recorde.setVisibility(View.GONE);
+//                    String jsonArrayString = mySharedPreferences.getListaAtividades();
+//                    try {
+//                        JSONArray jsonArray = new JSONArray(jsonArrayString);
+//                        carregaLista(jsonArray);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
                 }
             }
         });

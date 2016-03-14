@@ -13,19 +13,23 @@ public class Atividade implements Comparable<Atividade>, Serializable{
     private Date data;
 
 
+    public Atividade(String nome, int tempoInvestido, Date dataAtual) throws Exception{
+        this(nome, tempoInvestido, dataAtual, null);
+    }
+
     public Atividade(String nome, Date dataAtual) throws Exception{
-        this(nome, 0, null);
-        this.data = dataAtual;
+        this(nome, 0, dataAtual, null);
+
     }
     public Atividade(String nome ) throws Exception{
-        this(nome, 0, null);
+        this(nome, 0, null, null);
     }
 
     public Atividade(String nome, int tempoInvestido) throws Exception {
-        this(nome, tempoInvestido, null);
+        this(nome, tempoInvestido, null, null);
     }
 
-    public Atividade(String nome, int tempoInvestido, byte[] foto) throws Exception{
+    public Atividade(String nome, int tempoInvestido, Date dataAtual, byte[] foto) throws Exception{
         if(nome == null || nome.equals("")) {
             throw new Exception("Nome inválido!");
         }
@@ -36,7 +40,7 @@ public class Atividade implements Comparable<Atividade>, Serializable{
 
         this.nome = nome;
         this.tempoInvestido = tempoInvestido;
-        this.data = new Date();
+        this.data = dataAtual;
     }
 
     public void setNome(String nome) throws Exception {
