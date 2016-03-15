@@ -1,9 +1,7 @@
 package povmt.projeto.les.povmt.projetopiloto.views;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,20 +12,16 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import povmt.projeto.les.povmt.projetopiloto.R;
 import povmt.projeto.les.povmt.projetopiloto.models.Atividade;
+import povmt.projeto.les.povmt.projetopiloto.models.MySharedPreferences;
 import povmt.projeto.les.povmt.projetopiloto.models.Semana;
-import povmt.projeto.les.povmt.projetopiloto.utils.HttpListener;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpUtils;
 
 public class AcompanhamentoActivity extends ActionBarActivity {
@@ -37,6 +31,8 @@ public class AcompanhamentoActivity extends ActionBarActivity {
     private Semana semanaAtual;
     private HorizontalBarChart mChart;
     private TextView tv_total_ti;
+    private MySharedPreferences mySharedPreferences;
+    private List<Atividade> listaAtividades;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,79 +53,19 @@ public class AcompanhamentoActivity extends ActionBarActivity {
         SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
         String dateFormat = format1.format(time);
 
+        mySharedPreferences = new MySharedPreferences(getApplicationContext());
         semanaAtual = new Semana(time);
-        String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
-        JSONObject json = new JSONObject();
-        try {
-            json.put("dataInicioSemana", dateFormat);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        listaAtividades = new ArrayList<>();
+        if (mySharedPreferences.getListAtividades() != null) {
+            listaAtividades = mySharedPreferences.getListAtividades();
         }
-        mHttp.post(url, json.toString(), new HttpListener() {
-            @Override
-            public void onSucess(final JSONObject result) {
-                try {
-                    if (result.getInt("ok") == 0) {
-                        new AlertDialog.Builder(AcompanhamentoActivity.this)
-                                .setTitle("Erro")
-                                .setMessage(result.getString("msg"))
-                                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        //mLoading.setVisibility(View.GONE);
-                                    }
-                                })
-                                .create()
-                                .show();
-                    } else {
-                        JSONArray array = result.getJSONArray("result");
-                        for (int i = 0; i < array.length(); i++) {
-                            JSONObject obj = array.getJSONObject(i);
-                            String nome = obj.getString("nomeAtividade");
-                            int tempoInvestido = obj.getInt("tempoInvestido");
-                            Atividade atv = new Atividade(nome, tempoInvestido);
-                            semanaAtual.adicionaAtividade(atv);
-                        }
-                        if(array.length() != 0) {
-                            preencheGrafico(mChart);
-                            mChart.setVisibility(View.VISIBLE);
-                        } else {
-                            new AlertDialog.Builder(AcompanhamentoActivity.this)
-                                    .setTitle("ACOMPANHAMENTO")
-                                    .setMessage("Nenhuma atividade registrada esta semana.")
-                                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                                        }
-                                    })
-                                    .create()
-                                    .show();
-                        }
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        if (listaAtividades.size() > 0) {
+            for (Atividade atividade : listaAtividades) {
+                semanaAtual.adicionaAtividade(atividade);
             }
-
-            @Override
-            public void onTimeout() {
-                new AlertDialog.Builder(AcompanhamentoActivity.this)
-                        .setTitle("Erro")
-                        .setMessage("Conexão não disponível.")
-                        .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        })
-                        .create()
-                        .show();
-            }
-        });
+            preencheGrafico(mChart);
+            mChart.setVisibility(View.VISIBLE);
+        }
     }
 
     private void preencheGrafico(HorizontalBarChart chart) {

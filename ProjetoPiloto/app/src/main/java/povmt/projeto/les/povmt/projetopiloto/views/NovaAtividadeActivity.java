@@ -6,11 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -100,11 +98,14 @@ public class NovaAtividadeActivity extends ActionBarActivity {
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
+                                        finish();
+                                        finish();
                                         setView(NovaAtividadeActivity.this, MainActivity.class);
                                     }
                                 })
                                 .create()
                                 .show();
+
                     }
                 }
 

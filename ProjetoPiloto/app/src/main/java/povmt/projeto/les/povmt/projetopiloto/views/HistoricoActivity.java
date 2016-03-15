@@ -26,6 +26,7 @@ import java.util.List;
 
 import povmt.projeto.les.povmt.projetopiloto.R;
 import povmt.projeto.les.povmt.projetopiloto.models.Atividade;
+import povmt.projeto.les.povmt.projetopiloto.models.MySharedPreferences;
 import povmt.projeto.les.povmt.projetopiloto.models.Semana;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpListener;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpUtils;
@@ -45,6 +46,8 @@ public class HistoricoActivity extends ActionBarActivity {
     private TextView tv_total_ti1;
     private TextView tv_total_ti2;
     private TextView tv_total_ti3;
+    private MySharedPreferences mySharedPreferences;
+    private List<Atividade> listaAtividadesSemanaAtual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,82 +74,22 @@ public class HistoricoActivity extends ActionBarActivity {
         SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
         String dateFormat = format1.format(time);
 
+        mySharedPreferences = new MySharedPreferences(getApplicationContext());
         semanaAtual = new Semana(time);
+        listaAtividadesSemanaAtual = new ArrayList<>();
+        if (mySharedPreferences.getListAtividades() != null) {
+            listaAtividadesSemanaAtual = mySharedPreferences.getListAtividades();
+        }
+        semanaAtual = new Semana(time);
+        if (listaAtividadesSemanaAtual.size() > 0) {
+            for (Atividade atividade : listaAtividadesSemanaAtual) {
+                semanaAtual.adicionaAtividade(atividade);
+            }
+            preencheGrafico(mChart1, semanaAtual, tv_total_ti1);
+            mChart1.setVisibility(View.VISIBLE);
+        }
 
         String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
-        JSONObject json = new JSONObject();
-        try {
-            json.put("dataInicioSemana", dateFormat);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        mHttp.post(url, json.toString(), new HttpListener() {
-            @Override
-            public void onSucess(final JSONObject result) {
-                try {
-                    if (result.getInt("ok") == 0) {
-                        new AlertDialog.Builder(HistoricoActivity.this)
-                                .setTitle("Erro")
-                                .setMessage(result.getString("msg"))
-                                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        //mLoading.setVisibility(View.GONE);
-                                    }
-                                })
-                                .create()
-                                .show();
-                    } else {
-                        JSONArray array = result.getJSONArray("result");
-                        for (int i = 0; i < array.length(); i++) {
-                            JSONObject obj = array.getJSONObject(i);
-                            String nome = obj.getString("nomeAtividade");
-                            int tempoInvestido = obj.getInt("tempoInvestido");
-                            Atividade atv = new Atividade(nome, tempoInvestido);
-                            semanaAtual.adicionaAtividade(atv);
-                        }
-                        if(array.length() != 0) {
-                            preencheGrafico(mChart1, semanaAtual, tv_total_ti1);
-                            mChart1.setVisibility(View.VISIBLE);
-                        } else {
-                            new AlertDialog.Builder(HistoricoActivity.this)
-                                    .setTitle("HISTÓRICO")
-                                    .setMessage("Nenhuma atividade registrada na semana atual.")
-                                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                                        }
-                                    })
-                                    .create()
-                                    .show();
-                        }
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onTimeout() {
-                new AlertDialog.Builder(HistoricoActivity.this)
-                        .setTitle("Erro")
-                        .setMessage("Conexão não disponível.")
-                        .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        })
-                        .create()
-                        .show();
-            }
-        });
-
-
         calSemana2.setTime(time);
         calSemana2.add(Calendar.DAY_OF_YEAR, -7);
         calSemana2.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
