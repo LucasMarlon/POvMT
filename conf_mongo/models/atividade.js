@@ -1,5 +1,6 @@
 module.exports = function(mongodb, app, atividadeCollection) {
 	app.post("/cadastrarAtividade", function (req, res){
+		var usuario = req.body.usuario;
 		var nomeAtividade = req.body.nomeAtividade;
 		var dataInicioSemana = req.body.dataInicioSemana;
 		var dataFimSemana = req.body.dataFimSemana;
@@ -9,8 +10,9 @@ module.exports = function(mongodb, app, atividadeCollection) {
 		var dataAtividade = req.body.dataAtividade;
 		
 		atividadeCollection.find({
-			nomeAtividade: nomeAtividade,
-			dataInicioSemana: dataInicioSemana
+			usuario: usuario,
+			nomeAtividade: nomeAtividade,			
+			dataInicioSemana: dataInicioSemana			
 			
 		}).toArray(function(err, array){
 			if(err) {
@@ -20,6 +22,7 @@ module.exports = function(mongodb, app, atividadeCollection) {
 					res.send('{ "ok" : 0, "msg" : "ATIVIDADE EXISTENTE" }');
 				} else {
 					atividadeCollection.insert({
+						usuario: usuario,
 						nomeAtividade: nomeAtividade,
 						dataInicioSemana: dataInicioSemana,
 						dataFimSemana: dataFimSemana,
@@ -42,11 +45,13 @@ module.exports = function(mongodb, app, atividadeCollection) {
 	});
 	
 	app.post("/incrementaTempoInvestido", function (req, res){
+		var usuario = req.body.usuario;
 		var dataInicioSemana = req.body.dataInicioSemana;
 		var nomeAtividade = req.body.nomeAtividade;
 		var tempoInvestido = req.body.tempoInvestido;
 		
 		atividadeCollection.find({
+			usuario: usuario,
 			nomeAtividade: nomeAtividade,
 			dataInicioSemana: dataInicioSemana
 			
@@ -58,7 +63,8 @@ module.exports = function(mongodb, app, atividadeCollection) {
 					res.send('{ "ok" : 0, "msg" : "ATIVIDADE INEXISTENTE" }');
 				} else {
 					atividadeCollection.update({
-						nomeAtividade:nomeAtividade, 
+						usuario: usuario,
+						nomeAtividade: nomeAtividade, 
 						dataInicioSemana: dataInicioSemana
 					},
 					{ $inc: { tempoInvestido: parseInt(tempoInvestido) } 
@@ -68,6 +74,7 @@ module.exports = function(mongodb, app, atividadeCollection) {
 							res.send('{"ok" : 0, "msg" : "' + err + '"}');
 						} else {
 							res.send('{"ok": 1}');	
+							
 						}
 					});
 				}				
@@ -77,6 +84,7 @@ module.exports = function(mongodb, app, atividadeCollection) {
 	});
 	
 	app.post("/updateAtividade", function (req, res){
+		var usuario = req.body.usuario;
 		var nomeAtividade = req.body.nomeAtividade
 		var dataInicioSemana = req.body.dataInicioSemana;
 		var dataFimSemana = req.body.dataFimSemana;
@@ -87,6 +95,7 @@ module.exports = function(mongodb, app, atividadeCollection) {
 		var tempoInvestido = req.body.tempoInvestido;
 		
 		atividadeCollection.find({
+			usuario: usuario,
 			nomeAtividade: nomeAtividade,
 			dataInicioSemana: dataInicioSemana
 			
@@ -98,10 +107,12 @@ module.exports = function(mongodb, app, atividadeCollection) {
 					res.send('{ "ok" : 0, "msg" : "ATIVIDADE INEXISTENTE" }');
 				} else {
 					atividadeCollection.update({
+						usuario: usuario,
 						nomeAtividade:nomeAtividade, 
 						dataInicioSemana: dataInicioSemana
 					},
 					{ 
+						usuario: usuario,
 						nomeAtividade: nomeAtividade,
 						dataInicioSemana: dataInicioSemana,
 						dataFimSemana: dataFimSemana,
@@ -125,10 +136,12 @@ module.exports = function(mongodb, app, atividadeCollection) {
 	});
 	
 	app.post("/deleteAtividade", function (req, res){
+		var usuario = req.body.usuario;
 		var nomeAtividade = req.body.nomeAtividade;
 		var dataInicioSemana = req.body.dataInicioSemana;
 		
 		atividadeCollection.find({
+			usuario: usuario,
 			nomeAtividade: nomeAtividade,
 			dataInicioSemana: dataInicioSemana
 			
@@ -140,6 +153,7 @@ module.exports = function(mongodb, app, atividadeCollection) {
 					res.send('{ "ok" : 0, "msg" : "ATIVIDADE INEXISTENTE" }');
 				} else {
 					atividadeCollection.remove({
+						usuario: usuario,
 						nomeAtividade: nomeAtividade,
 						dataInicioSemana: dataInicioSemana
 					}, function(err, doc){
@@ -157,10 +171,12 @@ module.exports = function(mongodb, app, atividadeCollection) {
 	
 	
 	app.post("/findAtividade", function (req, res){
+		var usuario = req.body.usuario;
 		var nomeAtividade = req.body.nomeAtividade;
 		var dataInicioSemana = req.body.dataInicioSemana;
 		
 		atividadeCollection.findOne({
+			usuario: usuario,
 			nomeAtividade: nomeAtividade,
 			dataInicioSemana: dataInicioSemana
 			
@@ -175,10 +191,11 @@ module.exports = function(mongodb, app, atividadeCollection) {
 	});
 	
 	app.post("/findAtividadesSemana", function(req, res){
+		var usuario = req.body.usuario;
 		var dataInicioSemana = req.body.dataInicioSemana;
 
 		atividadeCollection.find({
-			
+			usuario: usuario,
 			dataInicioSemana: dataInicioSemana
 			
 		}).toArray(function(err, array){
