@@ -10,31 +10,71 @@
     android:orientation="vertical"
     tools:context="povmt.projeto.les.povmt.projetopiloto.views.NovaAtividadeActivity">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/activity_name"
-        android:textSize="24dp"
-        android:layout_marginTop="30dp"/>
+        android:layout_height="wrap_content">
 
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/fotoAtividade"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="120dp"
+            android:src="@drawable/atividade"/>
 
-    <EditText
-        android:id="@+id/et_nome"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imgCamera"
+            android:src="@drawable/camera"
+            android:layout_marginLeft="250dp"/>
 
-    <Button
-        android:id="@+id/bt_add_atividade"
-        android:layout_width="wrap_content"
-        android:padding="5dp"
-        android:layout_height="30dp"
-        android:text="@string/registrar"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:background="@color/teal"
-        android:layout_gravity="left" />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imgGaleria"
+            android:src="@drawable/galeria"
+            android:layout_below="@id/imgCamera"
+            android:layout_marginLeft="250dp"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imgLixeira"
+            android:src="@drawable/lixeira"
+            android:layout_below="@id/imgGaleria"
+            android:layout_marginLeft="250dp"/>
+
+        <TextView
+            android:id="@+id/tv_nome_atividade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_name"
+            android:layout_below="@id/imgLixeira"
+            android:textSize="24dp"
+            android:layout_marginTop="50dp"/>
+
+        <EditText
+            android:id="@+id/et_nome"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_nome_atividade"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"/>
+
+        <Button
+            android:id="@+id/bt_add_atividade"
+            android:layout_width="wrap_content"
+            android:padding="5dp"
+            android:layout_height="30dp"
+            android:text="@string/registrar"
+            android:layout_below="@id/et_nome"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:background="@color/teal"
+            android:layout_gravity="left" />
+
+    </RelativeLayout>
 
 </LinearLayout>
