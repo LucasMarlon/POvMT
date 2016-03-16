@@ -1,0 +1,101 @@
+{
+  "project_info": {
+    "project_id": "povmt-1f223",
+    "project_number": "295669076542",
+    "name": "POvMT"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:295669076542:android:c311ee6503ac38ef",
+        "client_id": "android:povmt.projeto.les.povmt.projeto.piloto",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "povmt.projeto.les.povmt.projeto.piloto",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "295669076542-omoevm9ugfdepikjtjmedjrmdefifjal.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "povmt.projeto.les.povmt.projeto.piloto",
+            "certificate_hash": "F81AC99854BC23066C8D48B83299454F5CF7A171"
+          }
+        },
+        {
+          "client_id": "295669076542-ath8tqq5rpc1grn66nudj7hn3e0i4oi3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:295669076542:android:882e8427532fa39a",
+        "client_id": "android:povmt.projeto.les.povmt.projetopiloto",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "povmt.projeto.les.povmt.projetopiloto",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "295669076542-mi3vrr32rcont519eb5ueb7d8vvk6l4g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "povmt.projeto.les.povmt.projetopiloto",
+            "certificate_hash": "F81AC99854BC23066C8D48B83299454F5CF7A171"
+          }
+        },
+        {
+          "client_id": "295669076542-ath8tqq5rpc1grn66nudj7hn3e0i4oi3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
