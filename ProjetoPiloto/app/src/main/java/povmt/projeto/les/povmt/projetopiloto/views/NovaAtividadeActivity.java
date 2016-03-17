@@ -26,6 +26,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -68,6 +69,7 @@ public class NovaAtividadeActivity extends ActionBarActivity implements View.OnC
         btnLixeira.setOnClickListener(this);
         spinnerPrioridade = (Spinner) findViewById(R.id.sp_prioridade);
         mHttp = new HttpUtils(this);
+        prioridades = new ArrayList<>();
 
         final EditText nomeAtividade = (EditText) findViewById(R.id.et_nome);
         final Button registraAtividade =  (Button) findViewById(R.id.bt_add_atividade);
@@ -111,6 +113,7 @@ public class NovaAtividadeActivity extends ActionBarActivity implements View.OnC
                 SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
                 String dataSemana = format1.format(dateSem);
                 String dataAtual = format1.format(data.getTime());
+                String prioridade = selectedPrioridade;
 
                 ByteArrayOutputStream b = new ByteArrayOutputStream();
                 foto.compress(Bitmap.CompressFormat.JPEG, 100, b);
@@ -119,14 +122,14 @@ public class NovaAtividadeActivity extends ActionBarActivity implements View.OnC
                 String fotoString = Base64.encodeToString(fotoByte, Base64.NO_WRAP);
                 //Convertendo a foto do formato String para byte[]
                 //byte[] data = Base64.decode(imgString, Base64.DEFAULT);
-                registraAtividade(nome, dataSemana, dataAtual, fotoString);
+                registraAtividade(nome, dataSemana, dataAtual, fotoString, prioridade);
             }
         });
 
 
     }
 
-    private void registraAtividade(final String nome, final String dataSemana, final String dataAtual, final String foto) {
+    private void registraAtividade(final String nome, final String dataSemana, final String dataAtual, final String foto, final String prioridade) {
         if (nome.equals("")) {
             new AlertDialog.Builder(NovaAtividadeActivity.this)
                     .setTitle("Erro")
@@ -138,10 +141,11 @@ public class NovaAtividadeActivity extends ActionBarActivity implements View.OnC
             String url = "http://povmt-armq.rhcloud.com/cadastrarAtividade";
             JSONObject json = new JSONObject();
             try {
+               // json.put("usuario", "danielachenrique@gmail.com");
                 json.put("nomeAtividade", nome);
                 json.put("dataInicioSemana", dataSemana);
                 json.put("dataFimSemana", "");
-                json.put("prioridade", "");
+                json.put("prioridade", prioridade);
                 json.put("foto", foto);
                 json.put("categoria", "");
                 json.put("dataAtividade", dataAtual);
@@ -246,7 +250,7 @@ public class NovaAtividadeActivity extends ActionBarActivity implements View.OnC
         }
     }
 
-    public void putPriorityElementsOnSpinnerArray(final List<String> prioridades) {
+    private void putPriorityElementsOnSpinnerArray(List<String> prioridades) {
         prioridades.add(PRIORIDADE.BAIXA.getValor());
         prioridades.add(PRIORIDADE.MEDIA.getValor());
         prioridades.add(PRIORIDADE.ALTA.getValor());

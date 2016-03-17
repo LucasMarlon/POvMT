@@ -7,12 +7,15 @@ public class Atividade implements Comparable<Atividade>, Serializable{
 
     private String nome;
     private PRIORIDADE prioridade;
+    //private String prioridade;
     private byte[] foto;
     private CATEGORIA categoria;
     private int tempoInvestido;
     private Date data;
 
-
+    public Atividade(String nome, int tempoInvestido, Date dataAtual) throws Exception{
+        this(nome, tempoInvestido, dataAtual, null, null);
+    }
     public Atividade(String nome, int tempoInvestido, Date dataAtual, PRIORIDADE prioridade) throws Exception{
         this(nome, tempoInvestido, dataAtual, prioridade, null);
     }

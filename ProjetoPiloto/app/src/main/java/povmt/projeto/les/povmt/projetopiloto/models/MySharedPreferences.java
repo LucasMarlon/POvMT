@@ -39,10 +39,7 @@ public class MySharedPreferences {
         editor.commit();
     }
 
-    public String getListaAtividades() {
-        String jsonArrayString = pref.getString(KEY_LISTA_ATIVIDADES, "");
-        return jsonArrayString;
-    }
+
     public List<Atividade> getListAtividades() {
         String jsonArrayString = pref.getString(KEY_LISTA_ATIVIDADES, "");
         try {
@@ -63,6 +60,9 @@ public class MySharedPreferences {
             String nome = jsonAtividade.getString("nomeAtividade");
             int tempoInvestido = jsonAtividade.getInt("tempoInvestido");
             String data = jsonAtividade.getString("dataAtividade");
+            String prioridade_value = jsonAtividade.getString("prioridade");
+
+            PRIORIDADE prioridade = PRIORIDADE.getEnum(prioridade_value);
 
             DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
             Date dataAtividade = new Date();
@@ -72,13 +72,13 @@ public class MySharedPreferences {
                 e.printStackTrace();
             }
             try {
-                Atividade atividade = new Atividade(nome, tempoInvestido, dataAtividade);
+                Atividade atividade = new Atividade(nome, tempoInvestido, dataAtividade, prioridade);
                 listaAtividades.add(atividade);
-//                adapter = new ActivityAdapter(this, listaAtividades);
-//                listViewAtividades.setAdapter(adapter);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
+
+
 }

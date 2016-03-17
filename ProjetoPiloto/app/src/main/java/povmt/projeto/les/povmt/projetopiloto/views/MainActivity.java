@@ -2,8 +2,6 @@ package povmt.projeto.les.povmt.projetopiloto.views;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -21,8 +19,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -102,13 +98,6 @@ public class MainActivity extends ActionBarActivity {
         super.onStart();
     }
 
-    public boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-
-
     public void getListaAtividades(final String dataInicioSemana) {
         String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
         final JSONObject json = new JSONObject();
@@ -126,11 +115,13 @@ public class MainActivity extends ActionBarActivity {
                 if (result.getInt("ok") == 1) {
                     JSONArray jsonArray = result.getJSONArray("result");
                     mySharedPreferences.salvaListaAtividades(jsonArray.toString());
-                    carregaLista(jsonArray);
+                    listaAtividades = mySharedPreferences.getListAtividades();
                     if (listaAtividades.size() == 0) {
                         no_recorde.setVisibility(View.VISIBLE);
                         listViewAtividades.setVisibility(View.GONE);
                     }
+                    adapter = new ActivityAdapter(MainActivity.this, listaAtividades);
+                    listViewAtividades.setAdapter(adapter);
                 }
             }
 
@@ -163,32 +154,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-    public void carregaLista(JSONArray jsonArray) throws JSONException {
-        listaAtividades = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonAtividade = jsonArray.getJSONObject(i);
-            String nome = jsonAtividade.getString("nomeAtividade");
-            String data = jsonAtividade.getString("dataAtividade");
-
-            DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-            // SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            dataAtividade = new Date();
-            try {
-                dataAtividade = format.parse(data);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                Atividade atividade = new Atividade(nome, dataAtividade);
-                listaAtividades.add(atividade);
-                adapter = new ActivityAdapter(this, listaAtividades);
-                listViewAtividades.setAdapter(adapter);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
 
     public void setView(Context context, Class classe) {
