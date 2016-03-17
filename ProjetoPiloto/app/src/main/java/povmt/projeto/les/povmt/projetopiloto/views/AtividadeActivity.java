@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +28,8 @@ public class AtividadeActivity extends ActionBarActivity {
 
     private HttpUtils mHttp;
     private Calendar cal = Calendar.getInstance();
+    private Atividade atividade;
+    private TextView tv_nome_atividade;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,12 @@ public class AtividadeActivity extends ActionBarActivity {
         mHttp = new HttpUtils(this);
         Button btAddTime = (Button) findViewById(R.id.bt_add_time);
         final EditText etTime = (EditText) findViewById(R.id.et_time);
+
+        Intent it = getIntent();
+        atividade = (Atividade) it.getSerializableExtra("ATIVIDADE");
+
+        tv_nome_atividade = (TextView) findViewById(R.id.tv_activity_name);
+        tv_nome_atividade.setText(atividade.getNome());
 
         btAddTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,9 +56,6 @@ public class AtividadeActivity extends ActionBarActivity {
     }
 
     private void registrarTI(int tempo) {
-        Intent it = getIntent();
-        Atividade atividade = (Atividade) it.getSerializableExtra("ATIVIDADE");
-
         String url = "http://povmt-armq.rhcloud.com/incrementaTempoInvestido";
         JSONObject json = new JSONObject();
         try {
