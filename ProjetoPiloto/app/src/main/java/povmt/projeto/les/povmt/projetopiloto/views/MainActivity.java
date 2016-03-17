@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import povmt.projeto.les.povmt.projetopiloto.ConfiguracaoActivity;
 import povmt.projeto.les.povmt.projetopiloto.R;
 import povmt.projeto.les.povmt.projetopiloto.adapters.ActivityAdapter;
 import povmt.projeto.les.povmt.projetopiloto.adapters.DrawerListAdapter;
@@ -166,6 +167,7 @@ public class MainActivity extends ActionBarActivity {
     public void setmDrawer(ArrayList<NavItem> mNavItems) {
         mNavItems.add(new NavItem("Minha semana", R.mipmap.ic_launcher));
         mNavItems.add(new NavItem("Histórico", R.mipmap.ic_launcher));
+        mNavItems.add(new NavItem("Configuração", R.mipmap.ic_launcher));
         mNavItems.add(new NavItem("Sair", R.mipmap.ic_launcher));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -185,6 +187,10 @@ public class MainActivity extends ActionBarActivity {
                 if (position == 1) {
                     mDrawerLayout.closeDrawer(mDrawerPane);
                     setView(MainActivity.this, HistoricoActivity.class);
+                }
+                if (position == 2) {
+                    mDrawerLayout.closeDrawer(mDrawerPane);
+                    setView(MainActivity.this, ConfiguracaoActivity.class);
                 }
 
             }

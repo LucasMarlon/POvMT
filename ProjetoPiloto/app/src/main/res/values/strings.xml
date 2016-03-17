@@ -26,6 +26,7 @@
     <string name="nova_atividade">Registrar atividade</string>
     <string name="title_activity_historico">Histórico</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_configuracao">ConfiguracaoActivity</string>
 
 
 
