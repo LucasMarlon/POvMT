@@ -8,40 +8,47 @@ module.exports = function(mongodb, app, atividadeCollection) {
 		var	foto = req.body.foto;
 		var	categoria = req.body.categoria;
 		var dataAtividade = req.body.dataAtividade;
+				
+		var inconsistencia = verificaInconsistencia(dataInicioSemana, usuario, nomeAtividade);
 		
-		atividadeCollection.find({
-			usuario: usuario,
-			nomeAtividade: nomeAtividade,			
-			dataInicioSemana: dataInicioSemana			
-			
-		}).toArray(function(err, array){
-			if(err) {
-				res.send('{ "ok" : 0, "msg" : "' + err + '" }');
-			} else {
-				if(array.length > 0) {
-					res.send('{ "ok" : 0, "msg" : "ATIVIDADE EXISTENTE" }');
-				} else {
-					atividadeCollection.insert({
-						usuario: usuario,
-						nomeAtividade: nomeAtividade,
-						dataInicioSemana: dataInicioSemana,
-						dataFimSemana: dataFimSemana,
-						prioridade: prioridade,
-						foto: foto,
-						categoria: categoria,
-						dataAtividade: dataAtividade,						
-						tempoInvestido : 0
+		if (inconsistencia) {
+			res.send(inconsistencia);
+		} else {
+			atividadeCollection.find({
+				usuario: usuario,
+				nomeAtividade: nomeAtividade,			
+				dataInicioSemana: dataInicioSemana			
 					
-					},function(err, doc){
-						if(err){
-							res.send('{ "ok" : 0, "msg" : "' + err + '" }');
-						} else {
-							res.send('{"ok": 1}');	
-						}
-					});
-				}				
-			}
-		});			
+			}).toArray(function(err, array){
+				if(err) {
+					res.send('{ "ok" : 0, "msg" : "' + err + '" }');
+				} else {
+					if(array.length > 0) {
+						res.send('{ "ok" : 0, "msg" : "ATIVIDADE EXISTENTE" }');
+					} else {
+						atividadeCollection.insert({
+							usuario: usuario,
+							nomeAtividade: nomeAtividade,
+							dataInicioSemana: dataInicioSemana,
+							dataFimSemana: dataFimSemana,
+							prioridade: prioridade,
+							foto: foto,
+							categoria: categoria,
+							dataAtividade: dataAtividade,						
+							tempoInvestido : 0
+						
+						},function(err, doc){
+							if(err){
+								res.send('{ "ok" : 0, "msg" : "' + err + '" }');
+							} else {
+								res.send('{"ok": 1}');	
+							}
+						});
+					}				
+				}
+			});	
+		}				
+		
 	});
 	
 	app.post("/incrementaTempoInvestido", function (req, res){
@@ -50,37 +57,45 @@ module.exports = function(mongodb, app, atividadeCollection) {
 		var nomeAtividade = req.body.nomeAtividade;
 		var tempoInvestido = req.body.tempoInvestido;
 		
-		atividadeCollection.find({
-			usuario: usuario,
-			nomeAtividade: nomeAtividade,
-			dataInicioSemana: dataInicioSemana
-			
-		}).toArray(function(err, array){
-			if(err) {
-				res.send('{ "ok" : 0, "msg" : "' + err + '" }');
-			} else {
-				if(array.length == 0) {
-					res.send('{ "ok" : 0, "msg" : "ATIVIDADE INEXISTENTE" }');
-				} else {
-					atividadeCollection.update({
-						usuario: usuario,
-						nomeAtividade: nomeAtividade, 
-						dataInicioSemana: dataInicioSemana
-					},
-					{ $inc: { tempoInvestido: parseInt(tempoInvestido) } 
-					
-					},function(err, doc){
-						if(err){
-							res.send('{"ok" : 0, "msg" : "' + err + '"}');
-						} else {
-							res.send('{"ok": 1}');	
-							
-						}
-					});
-				}				
-			}
-		});
+		var inconsistencia = verificaInconsistencia(dataInicioSemana, usuario, nomeAtividade);
+		var inconsistenciaTI = verificaInconsistenciaTI(tempoInvestido);
 		
+		if (inconsistencia) {
+			res.send(inconsistencia);
+		} else if (inconsistenciaTI) {
+			res.send(inconsistenciaTI);
+		} else {			
+			atividadeCollection.find({
+				usuario: usuario,
+				nomeAtividade: nomeAtividade,
+				dataInicioSemana: dataInicioSemana
+				
+			}).toArray(function(err, array){
+				if(err) {
+					res.send('{ "ok" : 0, "msg" : "' + err + '" }');
+				} else {
+					if(array.length == 0) {
+						res.send('{ "ok" : 0, "msg" : "ATIVIDADE INEXISTENTE" }');
+					} else {
+						atividadeCollection.update({
+							usuario: usuario,
+							nomeAtividade: nomeAtividade, 
+							dataInicioSemana: dataInicioSemana
+						},
+						{ $inc: { tempoInvestido: parseInt(tempoInvestido) } 
+						
+						},function(err, doc){
+							if(err){
+								res.send('{"ok" : 0, "msg" : "' + err + '"}');
+							} else {
+								res.send('{"ok": 1}');	
+								
+							}
+						});
+					}				
+				}
+			});			
+		}
 	});
 	
 	app.post("/updateAtividade", function (req, res){
@@ -93,45 +108,54 @@ module.exports = function(mongodb, app, atividadeCollection) {
 		var	categoria = req.body.categoria;
 		var dataAtividade = req.body.dataAtividade;
 		var tempoInvestido = req.body.tempoInvestido;
+				
+		var inconsistencia = verificaInconsistencia(dataInicioSemana, usuario, nomeAtividade);
+		var inconsistenciaTI = verificaInconsistenciaTI(tempoInvestido);
 		
-		atividadeCollection.find({
-			usuario: usuario,
-			nomeAtividade: nomeAtividade,
-			dataInicioSemana: dataInicioSemana
-			
-		}).toArray(function(err, array){
-			if(err) {
-				res.send('{ "ok" : 0, "msg" : "' + err + '" }');
-			} else {
-				if(array.length == 0) {
-					res.send('{ "ok" : 0, "msg" : "ATIVIDADE INEXISTENTE" }');
+		if (inconsistencia) {
+			res.send(inconsistencia);
+		} else if (inconsistenciaTI) {
+			res.send(inconsistenciaTI);
+		} else {
+			atividadeCollection.find({
+				usuario: usuario,
+				nomeAtividade: nomeAtividade,
+				dataInicioSemana: dataInicioSemana
+				
+			}).toArray(function(err, array){
+				if(err) {
+					res.send('{ "ok" : 0, "msg" : "' + err + '" }');
 				} else {
-					atividadeCollection.update({
-						usuario: usuario,
-						nomeAtividade:nomeAtividade, 
-						dataInicioSemana: dataInicioSemana
-					},
-					{ 
-						usuario: usuario,
-						nomeAtividade: nomeAtividade,
-						dataInicioSemana: dataInicioSemana,
-						dataFimSemana: dataFimSemana,
-						prioridade: prioridade,
-						foto: foto,
-						categoria: categoria,
-						dataAtividade: dataAtividade,						
-						tempoInvestido : parseInt(tempoInvestido) 
-					
-					},function(err, doc){
-						if(err){
-							res.send('{ "ok" : 0, "msg" : "' + err + '" }');
-						} else {
-							res.send('{ "ok" : 1 }');	
-						}
-					});
-				}				
-			}
-		});
+					if(array.length == 0) {
+						res.send('{ "ok" : 0, "msg" : "ATIVIDADE INEXISTENTE" }');
+					} else {					
+						atividadeCollection.update({
+							usuario: usuario,
+							nomeAtividade:nomeAtividade, 
+							dataInicioSemana: dataInicioSemana
+						},
+						{ 
+							usuario: usuario,
+							nomeAtividade: nomeAtividade,
+							dataInicioSemana: dataInicioSemana,
+							dataFimSemana: dataFimSemana,
+							prioridade: prioridade,
+							foto: foto,
+							categoria: categoria,
+							dataAtividade: dataAtividade,						
+							tempoInvestido : parseInt(tempoInvestido) 
+						
+						},function(err, doc){
+							if(err){
+								res.send('{ "ok" : 0, "msg" : "' + err + '" }');
+							} else {
+								res.send('{ "ok" : 1 }');	
+							}
+						});
+					}				
+				}
+			});
+		}	
 		
 	});
 	
@@ -207,6 +231,26 @@ module.exports = function(mongodb, app, atividadeCollection) {
 		});	
 		
 	});
+	
+	function verificaInconsistencia(dataInicioSemana, emailUsuario, nomeAtividade) {
+		if (!dataInicioSemana) {
+			return '{ "ok" : 0, "msg" : "Data da Semana inválida!" }';
+		}
+		if (!emailUsuario) {
+			return '{ "ok" : 0, "msg" : "Email não informado!" }';
+		}
+		if (!nomeAtividade) {
+			return '{ "ok" : 0, "msg" : "Nome da atividade não informado!" }';
+		}
+		return;
+	}
+	
+	function verificaInconsistenciaTI(tempoInvestido) {
+		if (!tempoInvestido || tempoInvestido < 0) {
+			return '{ "ok" : 0, "msg" : "Tempo Investido inválido!" }';
+		}
+		return;
+	}
 	
 	return this;
 }
