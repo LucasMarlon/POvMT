@@ -11,4 +11,9 @@ public enum PRIORIDADE {
     private PRIORIDADE(String valor) {
         this.valor = valor;
     }
+
+
+    public String getValor(){
+        return valor;
+    }
 }

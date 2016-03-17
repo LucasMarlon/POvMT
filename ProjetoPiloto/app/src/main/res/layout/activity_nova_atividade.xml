@@ -18,53 +18,69 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:id="@+id/fotoAtividade"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="120dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
             android:src="@drawable/atividade"/>
 
         <ImageButton
+            android:id="@+id/imgCamera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imgCamera"
             android:src="@drawable/camera"
-            android:layout_marginLeft="250dp"/>
+            android:layout_toEndOf="@+id/fotoAtividade" />
 
         <ImageButton
+            android:id="@+id/imgGaleria"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imgGaleria"
             android:src="@drawable/galeria"
             android:layout_below="@id/imgCamera"
-            android:layout_marginLeft="250dp"/>
+            android:layout_toEndOf="@+id/fotoAtividade"/>
 
         <ImageButton
+            android:id="@+id/imgLixeira"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imgLixeira"
             android:src="@drawable/lixeira"
             android:layout_below="@id/imgGaleria"
-            android:layout_marginLeft="250dp"/>
+            android:layout_toEndOf="@+id/fotoAtividade"/>
+
+    </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_nome_atividade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/activity_name"
-            android:layout_below="@id/imgLixeira"
-            android:textSize="24dp"
-            android:layout_marginTop="50dp"/>
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"/>
 
         <EditText
             android:id="@+id/et_nome"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_nome_atividade"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/prioridade"
+            android:textSize="18sp"/>
+
+        <Spinner
+            android:id="@+id/sp_prioridade"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            />
 
         <Button
             android:id="@+id/bt_add_atividade"
             android:layout_width="wrap_content"
+            android:layout_marginTop="20dp"
             android:padding="5dp"
             android:layout_height="30dp"
             android:text="@string/registrar"
@@ -74,7 +90,5 @@
             android:textColor="@color/white"
             android:background="@color/teal"
             android:layout_gravity="left" />
-
-    </RelativeLayout>
 
 </LinearLayout>

@@ -13,10 +13,13 @@ import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,8 +28,11 @@ import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import povmt.projeto.les.povmt.projetopiloto.R;
+import povmt.projeto.les.povmt.projetopiloto.models.PRIORIDADE;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpListener;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpUtils;
 
@@ -42,6 +48,9 @@ public class NovaAtividadeActivity extends ActionBarActivity implements View.OnC
     private static final int RESULT_CAMERA = 111;
     private static final int RESULT_GALERIA = 222;
     private Bitmap foto;
+    Spinner spinnerPrioridade;
+    List<String> prioridades;
+    private String selectedPrioridade;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +66,35 @@ public class NovaAtividadeActivity extends ActionBarActivity implements View.OnC
         btnGaleria.setOnClickListener(this);
         btnLixeira = (ImageButton) findViewById(R.id.imgLixeira);
         btnLixeira.setOnClickListener(this);
-
+        spinnerPrioridade = (Spinner) findViewById(R.id.sp_prioridade);
         mHttp = new HttpUtils(this);
 
         final EditText nomeAtividade = (EditText) findViewById(R.id.et_nome);
         final Button registraAtividade =  (Button) findViewById(R.id.bt_add_atividade);
+
+        putPriorityElementsOnSpinnerArray(prioridades);
+
+        ArrayAdapter<String> spinnerArrayAdapterPrioridades = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, prioridades);
+        spinnerArrayAdapterPrioridades.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+        spinnerPrioridade.setAdapter(spinnerArrayAdapterPrioridades);
+
+        spinnerPrioridade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int pos, final long id) {
+                Object item = parent.getItemAtPosition(pos);
+                String itemPrioridade = item.toString().toUpperCase(Locale.getDefault());
+
+                if (itemPrioridade.equals(PRIORIDADE.BAIXA.getValor().toUpperCase(Locale.getDefault()))) {
+                    selectedPrioridade = PRIORIDADE.BAIXA.getValor();
+                } else if (itemPrioridade.equals(PRIORIDADE.MEDIA.getValor().toUpperCase(Locale.getDefault()))) {
+                    selectedPrioridade = PRIORIDADE.MEDIA.getValor();
+                } else if (itemPrioridade.equals(PRIORIDADE.ALTA.getValor().toUpperCase(Locale.getDefault()))) {
+                    selectedPrioridade = PRIORIDADE.ALTA.getValor();
+                }
+            }
+
+            public void onNothingSelected(final AdapterView<?> parent) {
+            }
+        });
 
         registraAtividade.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,6 +244,12 @@ public class NovaAtividadeActivity extends ActionBarActivity implements View.OnC
                 fotoAtividadeImageView.setImageBitmap(Bitmap.createScaledBitmap(foto, 100, 100, false));
             }
         }
+    }
+
+    public void putPriorityElementsOnSpinnerArray(final List<String> prioridades) {
+        prioridades.add(PRIORIDADE.BAIXA.getValor());
+        prioridades.add(PRIORIDADE.MEDIA.getValor());
+        prioridades.add(PRIORIDADE.ALTA.getValor());
     }
 
 }
