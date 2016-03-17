@@ -116,7 +116,6 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
             @Override
             public void onClick(View v) {
                 signIn();
-                setView(LoginActivity.this, MainActivity.class);
             }
         });
     }
@@ -146,6 +145,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
             System.out.println(acct.getDisplayName());
             System.out.println(acct.getEmail());
             this.emailLogado = acct.getEmail();
+            setView(LoginActivity.this, MainActivity.class);
         } else {
             // Signed out, show unauthenticated UI.
             System.out.println("DESLOGADO");
