@@ -3,11 +3,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -30,6 +33,7 @@ public class AtividadeActivity extends ActionBarActivity {
     private Calendar cal = Calendar.getInstance();
     private Atividade atividade;
     private TextView tv_nome_atividade;
+    private ImageView iv_foto_atividade;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,13 @@ public class AtividadeActivity extends ActionBarActivity {
 
         Intent it = getIntent();
         atividade = (Atividade) it.getSerializableExtra("ATIVIDADE");
+
+        byte [] fotoByte = atividade.getFoto();
+        Bitmap fotoBitmap = BitmapFactory.decodeByteArray(fotoByte, 0, fotoByte.length);
+
+        iv_foto_atividade = (ImageView) findViewById(R.id.iv_foto_atividade);
+        iv_foto_atividade.setImageBitmap(fotoBitmap);
+        iv_foto_atividade.setImageBitmap(Bitmap.createScaledBitmap(fotoBitmap, 50, 50, false));
 
         tv_nome_atividade = (TextView) findViewById(R.id.tv_activity_name);
         tv_nome_atividade.setText(atividade.getNome());

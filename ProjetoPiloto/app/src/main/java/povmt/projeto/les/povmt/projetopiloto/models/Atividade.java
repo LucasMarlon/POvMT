@@ -45,6 +45,7 @@ public class Atividade implements Comparable<Atividade>, Serializable{
         this.tempoInvestido = tempoInvestido;
         this.data = dataAtual;
         this.prioridade = prioridade;
+        this.foto = foto;
     }
 
     public void setNome(String nome) throws Exception {
