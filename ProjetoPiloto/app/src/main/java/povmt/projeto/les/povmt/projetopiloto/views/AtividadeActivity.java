@@ -63,6 +63,7 @@ public class AtividadeActivity extends ActionBarActivity {
 
             json.put("nomeAtividade", atividade.getNome());
             json.put("dataInicioSemana", dataInicioSemana);
+            json.put("usuario", LoginActivity.emailLogado);
             json.put("tempoInvestido", tempo);
         } catch (JSONException e) {
             e.printStackTrace();
