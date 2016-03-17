@@ -91,6 +91,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
     private GoogleApiClient mGoogleApiClient;
     private String TAG = "SUCESSOOOOOOOOOOOOOOOOOO";
     private static int RC_SIGN_IN = 444;
+    public static String emailLogado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +145,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
             System.out.println("LOGADO");
             System.out.println(acct.getDisplayName());
             System.out.println(acct.getEmail());
+            this.emailLogado = acct.getEmail();
         } else {
             // Signed out, show unauthenticated UI.
             System.out.println("DESLOGADO");

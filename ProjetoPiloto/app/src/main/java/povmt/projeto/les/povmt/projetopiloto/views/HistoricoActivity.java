@@ -106,6 +106,7 @@ public class HistoricoActivity extends ActionBarActivity {
         JSONObject json2 = new JSONObject();
         try {
             json2.put("dataInicioSemana", dateSemana2);
+            json2.put("usuario", LoginActivity.emailLogado);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -191,6 +192,7 @@ public class HistoricoActivity extends ActionBarActivity {
         JSONObject json3 = new JSONObject();
         try {
             json3.put("dataInicioSemana", dateSemana3);
+            json3.put("usuario", LoginActivity.emailLogado);
         } catch (JSONException e) {
             e.printStackTrace();
         }

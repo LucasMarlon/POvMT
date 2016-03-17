@@ -103,6 +103,7 @@ public class MainActivity extends ActionBarActivity {
         final JSONObject json = new JSONObject();
         try {
             json.put("dataInicioSemana", dataInicioSemana);  //TODO PASSAR a String dataInicioSemana dada como parâmetro
+            json.put("usuario", LoginActivity.emailLogado);
         } catch (JSONException e) {
             e.printStackTrace();
         }

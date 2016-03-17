@@ -141,7 +141,7 @@ public class NovaAtividadeActivity extends ActionBarActivity implements View.OnC
             String url = "http://povmt-armq.rhcloud.com/cadastrarAtividade";
             JSONObject json = new JSONObject();
             try {
-               // json.put("usuario", "danielachenrique@gmail.com");
+                json.put("usuario", LoginActivity.emailLogado);
                 json.put("nomeAtividade", nome);
                 json.put("dataInicioSemana", dataSemana);
                 json.put("dataFimSemana", "");
