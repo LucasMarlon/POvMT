@@ -115,6 +115,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
             @Override
             public void onClick(View v) {
                 signIn();
+                setView(LoginActivity.this, MainActivity.class);
             }
         });
     }
@@ -152,6 +153,12 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
+    }
+
+    public void setView(Context context, Class classe){
+        Intent it = new Intent();
+        it.setClass(context, classe);
+        startActivity(it);
     }
 
 }
