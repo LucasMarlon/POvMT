@@ -1,9 +1,12 @@
 package povmt.projeto.les.povmt.projetopiloto.views;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -180,19 +183,23 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (position == 0) {
-                    mDrawerLayout.closeDrawer(mDrawerPane);
-                    setView(MainActivity.this, AcompanhamentoActivity.class);
+                switch (position) {
+                    case 0:
+                        mDrawerLayout.closeDrawer(mDrawerPane);
+                        setView(MainActivity.this, AcompanhamentoActivity.class);
+                        break;
+                    case 1:
+                        mDrawerLayout.closeDrawer(mDrawerPane);
+                        setView(MainActivity.this, HistoricoActivity.class);
+                        break;
+                    case 2:
+                        mDrawerLayout.closeDrawer(mDrawerPane);
+                        setView(MainActivity.this, ConfiguracaoActivity.class);
+                        break;
+                    default:
+                        notificar();
+                        break;
                 }
-                if (position == 1) {
-                    mDrawerLayout.closeDrawer(mDrawerPane);
-                    setView(MainActivity.this, HistoricoActivity.class);
-                }
-                if (position == 2) {
-                    mDrawerLayout.closeDrawer(mDrawerPane);
-                    setView(MainActivity.this, ConfiguracaoActivity.class);
-                }
-
             }
         });
     }
@@ -244,4 +251,32 @@ public class MainActivity extends ActionBarActivity {
 //       AppIndex.AppIndexApi.end(client, viewAction);
 //        client.disconnect();
     }
+
+
+    public void notificar(){
+        int notificationId = 1;
+
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        int requestCode = 0;
+        PendingIntent resultPeddingIntent =
+                PendingIntent.getActivity(this, requestCode, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("POvMAT")
+                .setContentText("Você tem atividades para adicionar o Ti")
+                .setContentIntent(resultPeddingIntent);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(notificationId, mBuilder.build());
+    }
 }
+
+
+
+
+
+
+
+
