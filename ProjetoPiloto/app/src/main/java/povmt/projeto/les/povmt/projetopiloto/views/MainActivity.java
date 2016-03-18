@@ -1,12 +1,11 @@
 package povmt.projeto.les.povmt.projetopiloto.views;
 
-import android.app.NotificationManager;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -51,6 +50,7 @@ public class MainActivity extends ActionBarActivity {
     private List<Atividade> listaAtividades;
     private HttpUtils mHttp;
     private Calendar cal = Calendar.getInstance();
+    public static final String ACTION = "com.example.android.receivers.NOTIFICATION_ALARM";
     Date data;
     Date dataAtividade;
     MySharedPreferences mySharedPreferences;
@@ -63,6 +63,8 @@ public class MainActivity extends ActionBarActivity {
 
         mNavItems = new ArrayList<>();
         setmDrawer(mNavItems);
+
+        notificar(00, 37);
 
         no_recorde = (TextView) findViewById(R.id.tv_no_record);
 
@@ -197,7 +199,7 @@ public class MainActivity extends ActionBarActivity {
                         setView(MainActivity.this, ConfiguracaoActivity.class);
                         break;
                     default:
-                        notificar();
+
                         break;
                 }
             }
@@ -231,7 +233,6 @@ public class MainActivity extends ActionBarActivity {
         setView(MainActivity.this, NovaAtividadeActivity.class);
     }
 
-
     @Override
     public void onStop() {
         super.onStop();
@@ -252,24 +253,25 @@ public class MainActivity extends ActionBarActivity {
 //        client.disconnect();
     }
 
+    public void notificar(int hora, int minuto)
+    {
+        Calendar calNow = Calendar.getInstance();
+        Calendar calSet = (Calendar) calNow.clone();
+        calSet.setTimeInMillis(System.currentTimeMillis());
+        calSet.set(Calendar.HOUR_OF_DAY, hora);
+        calSet.set(Calendar.MINUTE, minuto);
+        calSet.set(Calendar.SECOND, 0);
+        calSet.set(Calendar.MILLISECOND, 0);
 
-    public void notificar(){
-        int notificationId = 1;
+        setAlarm(calSet);
+    }
 
-        Intent resultIntent = new Intent(this, MainActivity.class);
-        int requestCode = 0;
-        PendingIntent resultPeddingIntent =
-                PendingIntent.getActivity(this, requestCode, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("POvMAT")
-                .setContentText("Você tem atividades para adicionar o Ti")
-                .setContentIntent(resultPeddingIntent);
-
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(notificationId, mBuilder.build());
+    private void setAlarm(Calendar targetCall)
+    {
+        Intent intent = new Intent(ACTION);
+        PendingIntent pendingintent = PendingIntent.getBroadcast(getBaseContext(), 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCall.getTimeInMillis(), pendingintent);
     }
 }
 

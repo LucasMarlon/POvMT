@@ -52,6 +52,15 @@
             android:name=".ConfiguracaoActivity"
             android:label="@string/title_activity_configuracao" >
         </activity>
+
+
+        <receiver
+            android:name=".models.MyBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.example.android.receivers.NOTIFICATION_ALARM" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
