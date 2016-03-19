@@ -4,6 +4,7 @@ package povmt.projeto.les.povmt.projetopiloto.models;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,6 +66,8 @@ public class MySharedPreferences {
             String fotoString = jsonAtividade.getString("foto");
 
             PRIORIDADE prioridade = PRIORIDADE.getEnum(prioridade_value);
+            Log.d("ENUM_PRIORIDADE", String.valueOf(prioridade));
+
 
             byte[] fotoByte = Base64.decode(fotoString, Base64.DEFAULT);
 
@@ -77,6 +80,7 @@ public class MySharedPreferences {
             }
             try {
                 Atividade atividade = new Atividade(nome, tempoInvestido, dataAtividade, prioridade, fotoByte);
+                Log.d("VALOR_DA_PRIORIDADE", prioridade.getValor());
                 listaAtividades.add(atividade);
             } catch (Exception e) {
                 e.printStackTrace();
