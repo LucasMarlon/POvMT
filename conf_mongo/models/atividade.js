@@ -1,4 +1,4 @@
-module.exports = function(mongodb, app, atividadeCollection) {
+module.exports = function(mongodb, app, atividadeCollection, schedule) {
 	app.post("/cadastrarAtividade", function (req, res){
 		var usuario = req.body.usuario;
 		var nomeAtividade = req.body.nomeAtividade;
@@ -34,7 +34,8 @@ module.exports = function(mongodb, app, atividadeCollection) {
 							prioridade: prioridade,
 							foto: foto,
 							categoria: categoria,
-							dataAtividade: dataAtividade,						
+							dataAtividade: dataAtividade,
+							tempoDiarioCadastrado: false,
 							tempoInvestido : 0
 						
 						},function(err, doc){
@@ -80,7 +81,8 @@ module.exports = function(mongodb, app, atividadeCollection) {
 						atividadeCollection.update({
 							usuario: usuario,
 							nomeAtividade: nomeAtividade, 
-							dataInicioSemana: dataInicioSemana
+							dataInicioSemana: dataInicioSemana,
+							tempoDiarioCadastrado: true
 						},
 						{ $inc: { tempoInvestido: parseInt(tempoInvestido) } 
 						
@@ -251,6 +253,41 @@ module.exports = function(mongodb, app, atividadeCollection) {
 		}
 		return;
 	}
+	
+	// Funcao chamada todos as noite aas 00:00h
+	// Configura o tempoDiarioCadastrado para false
+	// Indicando que nao foi cadastrado um TI naquele dia ainda
+	var j = schedule.scheduleJob({hour: 0, minute: 0}, function(){
+		try {
+			var firstDayOfWeek = getLastSunday(new Date());
+			console.log(firstDayOfWeek);
+			atividadeCollection.updateMany(				
+				{ "dataInicioSemana" : firstDayOfWeek },
+				{ $set: { "tempoDiarioCadastrado" : false } },
+				{ upsert: true }
+			);
+		}
+		catch (e) {
+		   print(e);
+		}
+	});
+	
+	function getLastSunday(d) {
+		var today = new Date(d);
+		today.setDate(today.getDate() - today.getDay());
+		var dd = today.getDate();
+		var mm = today.getMonth()+1; //January is 0!
+
+		var yyyy = today.getFullYear();
+		if(dd<10){
+			dd='0'+dd
+		} 
+		if(mm<10){
+			mm='0'+mm
+		} 
+		return dd+'/'+mm+'/'+yyyy;
+	}
+	
 	
 	return this;
 }
