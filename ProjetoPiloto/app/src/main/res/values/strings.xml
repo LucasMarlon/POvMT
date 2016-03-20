@@ -10,6 +10,9 @@
     <!-- Atividade Activity-->
     <string name="title_activity_">Activity</string>
     <string name="add_time">Registrar Ti</string>
+    <string name="categoria">Categoria</string>
+    <string name="add_categoria">Atribuir categoria</string>
+
 
     <!-- Nova atividade -->
     <string name="title_activity_new_activity">Nova atividade</string>

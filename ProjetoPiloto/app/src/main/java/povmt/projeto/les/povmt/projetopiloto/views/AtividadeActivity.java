@@ -8,9 +8,12 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -18,12 +21,15 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import povmt.projeto.les.povmt.projetopiloto.R;
 import povmt.projeto.les.povmt.projetopiloto.models.Atividade;
+import povmt.projeto.les.povmt.projetopiloto.models.CATEGORIA;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpListener;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpUtils;
 
@@ -34,6 +40,9 @@ public class AtividadeActivity extends ActionBarActivity {
     private Atividade atividade;
     private TextView tv_nome_atividade;
     private ImageView iv_foto_atividade;
+    Spinner spinnerCategoria;
+    List<String> categorias;
+    private String selectedCategoria;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +71,32 @@ public class AtividadeActivity extends ActionBarActivity {
             public void onClick(View v) {
                 String tempoInvestido = etTime.getText().toString();
                 registrarTI(Integer.parseInt(tempoInvestido));
+            }
+        });
+
+        spinnerCategoria = (Spinner) findViewById(R.id.sp_categoria);
+        categorias = new ArrayList<>();
+        Button atribuiCategoria =  (Button) findViewById(R.id.bt_add_categoria);
+
+        putCategoryElementsOnSpinnerArray(categorias);
+
+        ArrayAdapter<String> spinnerArrayAdapterCategorias = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categorias);
+        spinnerArrayAdapterCategorias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+        spinnerCategoria.setAdapter(spinnerArrayAdapterCategorias);
+
+        spinnerCategoria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int pos, final long id) {
+                Object item = parent.getItemAtPosition(pos);
+                String itemCategoria = item.toString().toUpperCase(Locale.getDefault());
+
+                if (itemCategoria.equals(CATEGORIA.TRABALHO.getValor().toUpperCase(Locale.getDefault()))) {
+                    selectedCategoria = CATEGORIA.TRABALHO.getValor();
+                } else if (itemCategoria.equals(CATEGORIA.LAZER.getValor().toUpperCase(Locale.getDefault()))) {
+                    selectedCategoria = CATEGORIA.LAZER.getValor();
+                }
+            }
+
+            public void onNothingSelected(final AdapterView<?> parent) {
             }
         });
     }
@@ -133,4 +168,8 @@ public class AtividadeActivity extends ActionBarActivity {
         startActivity(it);
     }
 
+    private void putCategoryElementsOnSpinnerArray(List<String> categorias) {
+        categorias.add(CATEGORIA.TRABALHO.getValor());
+        categorias.add(CATEGORIA.LAZER.getValor());
+    }
 }

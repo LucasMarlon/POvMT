@@ -38,7 +38,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="50dp"
         android:orientation="horizontal"
         android:id="@+id/linearLayout_time">
@@ -70,6 +70,35 @@
         android:textColor="@color/white"
         android:background="@color/teal"
         android:layout_gravity="left"
+        android:layout_marginTop="-15dp"
         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/categoria"
+        android:id="@+id/tv_categoria"
+        android:textSize="18sp"
+        android:layout_marginTop="15dp"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/sp_categoria"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:id="@+id/bt_add_categoria"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="20dp"
+        android:padding="5dp"
+        android:layout_height="30dp"
+        android:text="@string/add_categoria"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@color/teal"
+        android:layout_gravity="left" />
+
 
 </LinearLayout>
