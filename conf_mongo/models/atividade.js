@@ -101,6 +101,50 @@ module.exports = function(mongodb, app, atividadeCollection, schedule) {
 		}
 	});
 	
+	app.post("/adicionarCategoria", function (req, res){
+		var usuario = req.body.usuario;
+		var dataInicioSemana = req.body.dataInicioSemana;
+		var nomeAtividade = req.body.nomeAtividade;
+		var categoria = req.body.categoria;
+		
+		var inconsistencia = verificaInconsistencia(dataInicioSemana, usuario, nomeAtividade);
+		
+		if (inconsistencia) {
+			res.send(inconsistencia);
+		} else {			
+			atividadeCollection.find({
+				usuario: usuario,
+				nomeAtividade: nomeAtividade,
+				dataInicioSemana: dataInicioSemana
+				
+			}).toArray(function(err, array){
+				if(err) {
+					res.send('{ "ok" : 0, "msg" : "' + err + '" }');
+				} else {
+					if(array.length == 0) {
+						res.send('{ "ok" : 0, "msg" : "ATIVIDADE INEXISTENTE" }');
+					} else {
+						atividadeCollection.update({
+							usuario: usuario,
+							nomeAtividade: nomeAtividade, 
+							dataInicioSemana: dataInicioSemana
+						}, 
+						{ $set: {"categoria": categoria}
+						
+						},function(err, doc){
+							if(err){
+								res.send('{"ok" : 0, "msg" : "' + err + '"}');
+							} else {
+								res.send('{"ok": 1}');	
+								
+							}
+						});
+					}				
+				}
+			});			
+		}
+	});
+	
 	app.post("/updateAtividade", function (req, res){
 		var usuario = req.body.usuario;
 		var nomeAtividade = req.body.nomeAtividade
@@ -263,19 +307,32 @@ module.exports = function(mongodb, app, atividadeCollection, schedule) {
 		try {
 			var firstDayOfWeek = getLastSunday(new Date());
 			console.log(firstDayOfWeek);
-			atividadeCollection.updateMany(				
-				{ "dataInicioSemana" : firstDayOfWeek },
-				{ $set: { "foiCadastradoTIOntem": false } },
-				{ upsert: true }
-			);
-			atividadeCollection.updateMany(				
-				{ "dataInicioSemana" : firstDayOfWeek, "foiCadastradoTIHoje": true },
-				{ $set: { "foiCadastradoTIHoje" : false, "foiCadastradoTIOntem": true } },
-				{ upsert: true }
-			);
-		}
-		catch (e) {
-		   print(e);
+			
+			atividadeCollection.find({
+				dataInicioSemana: firstDayOfWeek
+				
+			}).toArray(function(err, array){
+				if(err) {
+					console.log('{ "ok" : 0, "msg" : "' + err + '" }');
+				} else {
+					if(array.length == 0) {
+						console.log('{ "ok" : 0, "msg" : "NENHUMA ATIVIDADE CADASTRADA NA SEMANA ATUAL" }');
+					} else {						
+						atividadeCollection.updateMany (				
+							{ "dataInicioSemana" : firstDayOfWeek },
+							{ $set: { "foiCadastradoTIOntem": false } },
+							{ upsert: true }
+						);
+						atividadeCollection.updateMany (				
+							{ "dataInicioSemana" : firstDayOfWeek, "foiCadastradoTIHoje": true },
+							{ $set: { "foiCadastradoTIHoje" : false, "foiCadastradoTIOntem": true } },
+							{ upsert: true }
+						);
+					}				
+				}
+			});
+		} catch (e) {
+		   console.log(e);
 		}
 	});
 	
