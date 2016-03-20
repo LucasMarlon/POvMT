@@ -50,7 +50,6 @@ public class MainActivity extends ActionBarActivity {
     private List<Atividade> listaAtividades;
     private HttpUtils mHttp;
     private Calendar cal = Calendar.getInstance();
-    public static final String ACTION = "com.example.android.receivers.NOTIFICATION_ALARM";
     Date data;
     Date dataAtividade;
     MySharedPreferences mySharedPreferences;
@@ -63,8 +62,6 @@ public class MainActivity extends ActionBarActivity {
 
         mNavItems = new ArrayList<>();
         setmDrawer(mNavItems);
-
-        notificar(00, 37);
 
         no_recorde = (TextView) findViewById(R.id.tv_no_record);
 
@@ -108,7 +105,7 @@ public class MainActivity extends ActionBarActivity {
         String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
         final JSONObject json = new JSONObject();
         try {
-            json.put("dataInicioSemana", dataInicioSemana);  //TODO PASSAR a String dataInicioSemana dada como parâmetro
+            json.put("dataInicioSemana", dataInicioSemana);
             json.put("usuario", LoginActivity.emailLogado);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -251,27 +248,6 @@ public class MainActivity extends ActionBarActivity {
 //        );
 //       AppIndex.AppIndexApi.end(client, viewAction);
 //        client.disconnect();
-    }
-
-    public void notificar(int hora, int minuto)
-    {
-        Calendar calNow = Calendar.getInstance();
-        Calendar calSet = (Calendar) calNow.clone();
-        calSet.setTimeInMillis(System.currentTimeMillis());
-        calSet.set(Calendar.HOUR_OF_DAY, hora);
-        calSet.set(Calendar.MINUTE, minuto);
-        calSet.set(Calendar.SECOND, 0);
-        calSet.set(Calendar.MILLISECOND, 0);
-
-        setAlarm(calSet);
-    }
-
-    private void setAlarm(Calendar targetCall)
-    {
-        Intent intent = new Intent(ACTION);
-        PendingIntent pendingintent = PendingIntent.getBroadcast(getBaseContext(), 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCall.getTimeInMillis(), pendingintent);
     }
 }
 
