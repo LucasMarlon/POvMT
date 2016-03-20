@@ -40,8 +40,7 @@
 
             <TextView
                 android:id="@+id/tv_total_ti1"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRigth="true"
+
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,8 +73,7 @@
             <TextView
                 android:id="@+id/tv_total_ti2"
                 android:layout_alignBottom="@+id/chart2"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
+
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -108,8 +106,7 @@
             <TextView
                 android:id="@+id/tv_total_ti3"
                 android:layout_alignBottom="@+id/chart3"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
+
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
