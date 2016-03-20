@@ -1,5 +1,6 @@
 package povmt.projeto.les.povmt.projetopiloto.views;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -69,23 +70,44 @@ public class AcompanhamentoActivity extends ActionBarActivity {
     }
 
     private void preencheGrafico(HorizontalBarChart chart) {
-        //Criando um array com as Proporções de TI
-        ArrayList<BarEntry> entradas = new ArrayList<>();
-        ArrayList<String> nomeDeAtividades = new ArrayList<String>();
+
+        ArrayList<BarDataSet> dataSets = new ArrayList<>();
+        ArrayList<BarEntry> priAlta = new ArrayList<>();
+        ArrayList<BarEntry> priMedia = new ArrayList<>();
+        ArrayList<BarEntry> priBaixa = new ArrayList<>();
 
         List<Atividade> atividadesSemanaAtual = semanaAtual.getAtividadesOrdenadas();
 
         for (int i = atividadesSemanaAtual.size()-1; i >= 0; i--) {
-            entradas.add(new BarEntry(semanaAtual.calculaProporcaoTempoInvestido(atividadesSemanaAtual.get(i)), i));
+            if (atividadesSemanaAtual.get(i).getPrioridade().getValor().equals("Alta")){
+                priAlta.add(new BarEntry(semanaAtual.calculaProporcaoTempoInvestido(atividadesSemanaAtual.get(i)), i));
+            }
+            else if (atividadesSemanaAtual.get(i).getPrioridade().getValor().equals("Média")){
+                priMedia.add(new BarEntry(semanaAtual.calculaProporcaoTempoInvestido(atividadesSemanaAtual.get(i)), i));
+            }
+            else if (atividadesSemanaAtual.get(i).getPrioridade().getValor().equals("Baixa")){
+                priBaixa.add(new BarEntry(semanaAtual.calculaProporcaoTempoInvestido(atividadesSemanaAtual.get(i)), i));
+            }
         }
+
+        ArrayList<String> nomeDeAtividades = new ArrayList<String>();
 
         for (int i = 0; i < atividadesSemanaAtual.size(); i++) {
             nomeDeAtividades.add(atividadesSemanaAtual.get(i).getNome());
         }
 
-        BarDataSet dataset = new BarDataSet(entradas, "Proporção de TI (%)");
+        BarDataSet barDataSetAlta = new BarDataSet(priAlta, "Alta - Proporção de TI (%)");
+        barDataSetAlta.setColor(Color.rgb(0, 155, 0));
+        BarDataSet barDataSetMedia = new BarDataSet(priMedia, "Média");
+        barDataSetMedia.setColor(Color.rgb(255, 0, 0));
+        BarDataSet barDataSetBaixa = new BarDataSet(priBaixa, "Prioridade Baixa");
+        barDataSetBaixa.setColor(Color.rgb(0, 0, 255));
 
-        BarData data = new BarData(nomeDeAtividades, dataset);
+        dataSets.add(barDataSetBaixa);
+        dataSets.add(barDataSetMedia);
+        dataSets.add(barDataSetAlta);
+
+        BarData data = new BarData(nomeDeAtividades, dataSets);
         chart.setData(data);
         tv_total_ti.setText("Total de TI: " + semanaAtual.calculaTempoTotalInvestido() + "hs");
         chart.setDescription("");

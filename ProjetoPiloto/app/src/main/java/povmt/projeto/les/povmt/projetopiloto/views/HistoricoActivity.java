@@ -2,6 +2,7 @@ package povmt.projeto.les.povmt.projetopiloto.views;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -40,7 +41,7 @@ public class HistoricoActivity extends ActionBarActivity {
     private HorizontalBarChart mChart1;
     private HorizontalBarChart mChart2;
     private HorizontalBarChart mChart3;
-    private Semana semanaAtual;
+    private Semana semana;
     private Semana semanaAnterior;
     private Semana semanaRetrasada;
     private TextView tv_total_ti1;
@@ -75,17 +76,17 @@ public class HistoricoActivity extends ActionBarActivity {
         String dateFormat = format1.format(time);
 
         mySharedPreferences = new MySharedPreferences(getApplicationContext());
-        semanaAtual = new Semana(time);
+        semana = new Semana(time);
         listaAtividadesSemanaAtual = new ArrayList<>();
         if (mySharedPreferences.getListAtividades() != null) {
             listaAtividadesSemanaAtual = mySharedPreferences.getListAtividades();
         }
-        semanaAtual = new Semana(time);
+        semana = new Semana(time);
         if (listaAtividadesSemanaAtual.size() > 0) {
             for (Atividade atividade : listaAtividadesSemanaAtual) {
-                semanaAtual.adicionaAtividade(atividade);
+                semana.adicionaAtividade(atividade);
             }
-            preencheGrafico(mChart1, semanaAtual, tv_total_ti1);
+            preencheGrafico(mChart1, semana, tv_total_ti1);
             mChart1.setVisibility(View.VISIBLE);
         }
 
@@ -265,23 +266,43 @@ public class HistoricoActivity extends ActionBarActivity {
     }
 
     private void preencheGrafico(HorizontalBarChart chart, Semana semana, TextView tv_total_ti) {
-        //Criando um array com as Proporções de TI
-        ArrayList<BarEntry> entradas = new ArrayList<>();
-        ArrayList<String> nomeDeAtividades = new ArrayList<String>();
+        ArrayList<BarDataSet> dataSets = new ArrayList<>();
+        ArrayList<BarEntry> priAlta = new ArrayList<>();
+        ArrayList<BarEntry> priMedia = new ArrayList<>();
+        ArrayList<BarEntry> priBaixa = new ArrayList<>();
 
         List<Atividade> atividadesSemana = semana.getAtividadesOrdenadas();
 
         for (int i = atividadesSemana.size()-1; i >= 0; i--) {
-            entradas.add(new BarEntry(semana.calculaProporcaoTempoInvestido(atividadesSemana.get(i)), i));
+            if (atividadesSemana.get(i).getPrioridade().getValor().equals("Alta")){
+                priAlta.add(new BarEntry(this.semana.calculaProporcaoTempoInvestido(atividadesSemana.get(i)), i));
+            }
+            else if (atividadesSemana.get(i).getPrioridade().getValor().equals("Média")){
+                priMedia.add(new BarEntry(this.semana.calculaProporcaoTempoInvestido(atividadesSemana.get(i)), i));
+            }
+            else if (atividadesSemana.get(i).getPrioridade().getValor().equals("Baixa")){
+                priBaixa.add(new BarEntry(this.semana.calculaProporcaoTempoInvestido(atividadesSemana.get(i)), i));
+            }
         }
+
+        ArrayList<String> nomeDeAtividades = new ArrayList<String>();
 
         for (int i = 0; i < atividadesSemana.size(); i++) {
             nomeDeAtividades.add(atividadesSemana.get(i).getNome());
         }
 
-        BarDataSet dataset = new BarDataSet(entradas, "Proporção de TI (%)");
+        BarDataSet barDataSetAlta = new BarDataSet(priAlta, "Alta - Proporção de TI (%)");
+        barDataSetAlta.setColor(Color.rgb(0, 155, 0));
+        BarDataSet barDataSetMedia = new BarDataSet(priMedia, "Média");
+        barDataSetMedia.setColor(Color.rgb(255, 0, 0));
+        BarDataSet barDataSetBaixa = new BarDataSet(priBaixa, "Prioridade Baixa");
+        barDataSetBaixa.setColor(Color.rgb(0, 0, 255));
 
-        BarData data = new BarData(nomeDeAtividades, dataset);
+        dataSets.add(barDataSetBaixa);
+        dataSets.add(barDataSetMedia);
+        dataSets.add(barDataSetAlta);
+
+        BarData data = new BarData(nomeDeAtividades, dataSets);
         chart.setData(data);
         tv_total_ti.setText("Total de TI: " + semana.calculaTempoTotalInvestido() + "hs");
         chart.setDescription("");

@@ -15,110 +15,106 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/tv_titulo1"
+                android:gravity="center"
+                android:layout_alignTop="@+id/chart1"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SEMANA ATUAL"
+                />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_titulo1"
-                    android:gravity="center"
-                    android:layout_alignTop="@+id/chart1"
-                    android:layout_marginTop="10dp"
-                    android:textStyle="bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="SEMANA ATUAL"
-                    />
 
                 <com.github.mikephil.charting.charts.HorizontalBarChart
                     android:visibility="invisible"
                     android:id="@+id/chart1"
                     android:layout_width="match_parent"
                     android:layout_height="300dp" />
-
-                <TextView
-                    android:id="@+id/tv_total_ti1"
-                    android:layout_alignBottom="@+id/chart1"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="200dp"
-                    android:textStyle="bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Total de TI: "
-                    />
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/tv_total_ti1"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRigth="true"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total de TI: "
+                />
+
+            <TextView
+                android:id="@+id/tv_titulo2"
+                android:layout_alignTop="@+id/chart2"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SEMANA PASSADA"
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_titulo2"
-                    android:layout_alignTop="@+id/chart2"
-                    android:gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:textStyle="bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="SEMANA PASSADA"
-                    />
 
                 <com.github.mikephil.charting.charts.HorizontalBarChart
                     android:visibility="invisible"
                     android:id="@+id/chart2"
                     android:layout_width="match_parent"
                     android:layout_height="300dp" />
-
-                <TextView
-                    android:id="@+id/tv_total_ti2"
-                    android:layout_alignBottom="@+id/chart2"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="200dp"
-                    android:textStyle="bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Total de TI: "
-                    />
-
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_total_ti2"
+                android:layout_alignBottom="@+id/chart2"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Total de TI: "
+                />
+
+            <TextView
+                android:id="@+id/tv_titulo3"
+                android:layout_alignTop="@+id/chart3"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SEMANA RETRASADA"
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_titulo3"
-                    android:layout_alignTop="@+id/chart3"
-                    android:gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:textStyle="bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="SEMANA RETRASADA"
-                    />
-
                 <com.github.mikephil.charting.charts.HorizontalBarChart
                     android:visibility="invisible"
                     android:id="@+id/chart3"
                     android:layout_width="match_parent"
                     android:layout_height="300dp" />
-
-                <TextView
-                    android:id="@+id/tv_total_ti3"
-                    android:layout_alignBottom="@+id/chart3"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="200dp"
-                    android:textStyle="bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Total de TI: "
-                    />
-
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_total_ti3"
+                android:layout_alignBottom="@+id/chart3"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Total de TI: "
+                />
 
         </LinearLayout>
 
