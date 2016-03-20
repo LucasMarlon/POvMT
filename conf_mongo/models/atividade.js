@@ -35,7 +35,8 @@ module.exports = function(mongodb, app, atividadeCollection, schedule) {
 							foto: foto,
 							categoria: categoria,
 							dataAtividade: dataAtividade,
-							tempoDiarioCadastrado: false,
+							foiCadastradoTIHoje: false,
+							foiCadastradoTIOntem : false,
 							tempoInvestido : 0
 						
 						},function(err, doc){
@@ -81,10 +82,10 @@ module.exports = function(mongodb, app, atividadeCollection, schedule) {
 						atividadeCollection.update({
 							usuario: usuario,
 							nomeAtividade: nomeAtividade, 
-							dataInicioSemana: dataInicioSemana,
-							tempoDiarioCadastrado: true
+							dataInicioSemana: dataInicioSemana
 						},
-						{ $inc: { tempoInvestido: parseInt(tempoInvestido) } 
+						{ $inc: { tempoInvestido: parseInt(tempoInvestido) },
+							$set: {"foiCadastradoTIHoje": true}
 						
 						},function(err, doc){
 							if(err){
@@ -110,6 +111,8 @@ module.exports = function(mongodb, app, atividadeCollection, schedule) {
 		var	categoria = req.body.categoria;
 		var dataAtividade = req.body.dataAtividade;
 		var tempoInvestido = req.body.tempoInvestido;
+		var foiCadastradoTIHoje = req.body.foiCadastradoTIHoje;
+		var foiCadastradoTIOntem = req.body.foiCadastradoTIOntem;
 				
 		var inconsistencia = verificaInconsistencia(dataInicioSemana, usuario, nomeAtividade);
 		var inconsistenciaTI = verificaInconsistenciaTI(tempoInvestido);
@@ -145,7 +148,8 @@ module.exports = function(mongodb, app, atividadeCollection, schedule) {
 							foto: foto,
 							categoria: categoria,
 							dataAtividade: dataAtividade,						
-							tempoInvestido : parseInt(tempoInvestido) 
+							tempoInvestido : parseInt(tempoInvestido),
+							foiCadastradoTIHoje: foiCadastradoTIHoje
 						
 						},function(err, doc){
 							if(err){
@@ -254,16 +258,19 @@ module.exports = function(mongodb, app, atividadeCollection, schedule) {
 		return;
 	}
 	
-	// Funcao chamada todos as noite aas 00:00h
-	// Configura o tempoDiarioCadastrado para false
-	// Indicando que nao foi cadastrado um TI naquele dia ainda
+	// Funcao chamada todos as noite aas 00:00h para atualizar as atividades
 	var j = schedule.scheduleJob({hour: 0, minute: 0}, function(){
 		try {
 			var firstDayOfWeek = getLastSunday(new Date());
 			console.log(firstDayOfWeek);
 			atividadeCollection.updateMany(				
 				{ "dataInicioSemana" : firstDayOfWeek },
-				{ $set: { "tempoDiarioCadastrado" : false } },
+				{ $set: { "foiCadastradoTIOntem": false } },
+				{ upsert: true }
+			);
+			atividadeCollection.updateMany(				
+				{ "dataInicioSemana" : firstDayOfWeek, "foiCadastradoTIHoje": true },
+				{ $set: { "foiCadastradoTIHoje" : false, "foiCadastradoTIOntem": true } },
 				{ upsert: true }
 			);
 		}
@@ -287,7 +294,6 @@ module.exports = function(mongodb, app, atividadeCollection, schedule) {
 		} 
 		return dd+'/'+mm+'/'+yyyy;
 	}
-	
-	
+		
 	return this;
 }
