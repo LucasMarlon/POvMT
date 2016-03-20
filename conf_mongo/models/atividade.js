@@ -214,32 +214,39 @@ module.exports = function(mongodb, app, atividadeCollection, schedule) {
 		var nomeAtividade = req.body.nomeAtividade;
 		var dataInicioSemana = req.body.dataInicioSemana;
 		
-		atividadeCollection.find({
-			usuario: usuario,
-			nomeAtividade: nomeAtividade,
-			dataInicioSemana: dataInicioSemana
-			
-		}).toArray(function(err, array){
-			if(err) {
-				res.send('{ "ok" : 0, "msg" : "' + err + '" }');
-			} else {
-				if(array.length == 0) {
-					res.send('{ "ok" : 0, "msg" : "ATIVIDADE INEXISTENTE" }');
+		var inconsistencia = verificaInconsistencia(dataInicioSemana, usuario, nomeAtividade);
+		
+		if (inconsistencia) {
+			res.send(inconsistencia);
+		} else {
+		
+			atividadeCollection.find({
+				usuario: usuario,
+				nomeAtividade: nomeAtividade,
+				dataInicioSemana: dataInicioSemana
+				
+			}).toArray(function(err, array){
+				if(err) {
+					res.send('{ "ok" : 0, "msg" : "' + err + '" }');
 				} else {
-					atividadeCollection.remove({
-						usuario: usuario,
-						nomeAtividade: nomeAtividade,
-						dataInicioSemana: dataInicioSemana
-					}, function(err, doc){
-						if(err){
-							res.send('{ "ok" : 0, "msg" : "' + err + '" }');
-						} else {
-							res.send('{ "ok" : 1 }');	
-						}
-					});
-				}				
-			}
-		});
+					if(array.length == 0) {
+						res.send('{ "ok" : 0, "msg" : "ATIVIDADE INEXISTENTE" }');
+					} else {
+						atividadeCollection.remove({
+							usuario: usuario,
+							nomeAtividade: nomeAtividade,
+							dataInicioSemana: dataInicioSemana
+						}, function(err, doc){
+							if(err){
+								res.send('{ "ok" : 0, "msg" : "' + err + '" }');
+							} else {
+								res.send('{ "ok" : 1 }');	
+							}
+						});
+					}				
+				}
+			});
+		}
 		
 	});
 	
@@ -249,18 +256,25 @@ module.exports = function(mongodb, app, atividadeCollection, schedule) {
 		var nomeAtividade = req.body.nomeAtividade;
 		var dataInicioSemana = req.body.dataInicioSemana;
 		
-		atividadeCollection.findOne({
-			usuario: usuario,
-			nomeAtividade: nomeAtividade,
-			dataInicioSemana: dataInicioSemana
-			
-		}, function(err, doc){
-			if(err){
-				res.send('{ "ok" : 0, "msg" : "' + err + '" }');
-			} else {
-				res.json(doc);	
-			}
-		});
+		var inconsistencia = verificaInconsistencia(dataInicioSemana, usuario, nomeAtividade);
+		
+		if (inconsistencia) {
+			res.send(inconsistencia);
+		} else {	
+		
+			atividadeCollection.findOne({
+				usuario: usuario,
+				nomeAtividade: nomeAtividade,
+				dataInicioSemana: dataInicioSemana
+				
+			}, function(err, doc){
+				if(err){
+					res.send('{ "ok" : 0, "msg" : "' + err + '" }');
+				} else {
+					res.json(doc);	
+				}
+			});
+		}
 		
 	});
 	
@@ -268,17 +282,23 @@ module.exports = function(mongodb, app, atividadeCollection, schedule) {
 		var usuario = req.body.usuario;
 		var dataInicioSemana = req.body.dataInicioSemana;
 
-		atividadeCollection.find({
-			usuario: usuario,
-			dataInicioSemana: dataInicioSemana
-			
-		}).toArray(function(err, array){
-			if(err) {
-				res.send('{ "ok" : 0, "msg" : "' + err + '" }');
-			} else {
-				res.json({ok : 1, result : array});       		
-			}
-		});	
+		var inconsistencia = verificaDataEmail(dataInicioSemana, usuario);
+		
+		if (inconsistencia) {
+			res.send(inconsistencia);
+		} else {
+			atividadeCollection.find({
+				usuario: usuario,
+				dataInicioSemana: dataInicioSemana
+				
+			}).toArray(function(err, array){
+				if(err) {
+					res.send('{ "ok" : 0, "msg" : "' + err + '" }');
+				} else {
+					res.json({ok : 1, result : array});       		
+				}
+			});	
+		}
 		
 	});
 	
@@ -291,6 +311,16 @@ module.exports = function(mongodb, app, atividadeCollection, schedule) {
 		}
 		if (!nomeAtividade) {
 			return '{ "ok" : 0, "msg" : "Nome da atividade não informado!" }';
+		}
+		return;
+	}
+	
+	function verificaDataEmail(dataInicioSemana, emailUsuario) {
+		if (!dataInicioSemana) {
+			return '{ "ok" : 0, "msg" : "Data da Semana inválida!" }';
+		}
+		if (!emailUsuario) {
+			return '{ "ok" : 0, "msg" : "Email não informado!" }';
 		}
 		return;
 	}
