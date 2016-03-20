@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var mongo = require("mongodb");
 var bodyParser = require("body-parser");
+var schedule = require("node-schedule");
  
  
 app.use(bodyParser.json());
@@ -14,7 +15,8 @@ new mongo.Db("povmt", new mongo.Server(process.env.OPENSHIFT_MONGODB_DB_HOST || 
         console.log("ERRO: " + err);
     } else {
         client.authenticate(process.env.OPENSHIFT_MONGODB_DB_USERNAME, process.env.OPENSHIFT_MONGODB_DB_PASSWORD, function(err) {
-            if (err) {
+            
+			if (err) {
                 console.log("ERRO DE AUTENTICAÇÃO: " + err);
             } else {
                 console.log("SUCESSO!");
@@ -22,7 +24,7 @@ new mongo.Db("povmt", new mongo.Server(process.env.OPENSHIFT_MONGODB_DB_HOST || 
                     if (err){
                         console.log("ERRO: " + err);
                     } else {
-						require("./models/atividade")(mongo, app, collection);
+						require("./models/atividade")(mongo, app, collection, schedule);
                     }
                 });
             }
