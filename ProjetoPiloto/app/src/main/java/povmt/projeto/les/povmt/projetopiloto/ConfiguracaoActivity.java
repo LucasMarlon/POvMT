@@ -5,8 +5,9 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
@@ -34,7 +35,7 @@ public class ConfiguracaoActivity extends ActionBarActivity {
     private HttpUtils mHttp;
     private Calendar cal = Calendar.getInstance();
     private boolean foiCadastradoTI;
-    private static final String ACTION = "com.example.android.receivers.NOTIFICATION_ALARM";
+    public static final String ACTION = "com.example.android.receivers.NOTIFICATION_ALARM";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class ConfiguracaoActivity extends ActionBarActivity {
         verificaSeCadastrouTI();
 
         notificar(00, 37);
+        Log.d("DANI", "NOTI");
 
         switchLembrete = (Switch) findViewById(R.id.switchLembrete);
         tp_hora_notificacao = (TimePicker) findViewById(R.id.tp_hora_notificacao);

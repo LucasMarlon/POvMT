@@ -1,7 +1,5 @@
 package povmt.projeto.les.povmt.projetopiloto.views;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -63,6 +61,7 @@ public class MainActivity extends ActionBarActivity {
         mNavItems = new ArrayList<>();
         setmDrawer(mNavItems);
 
+
         no_recorde = (TextView) findViewById(R.id.tv_no_record);
 
         mySharedPreferences = new MySharedPreferences(getApplicationContext());
@@ -107,6 +106,8 @@ public class MainActivity extends ActionBarActivity {
         try {
             json.put("dataInicioSemana", dataInicioSemana);
             json.put("usuario", LoginActivity.emailLogado);
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

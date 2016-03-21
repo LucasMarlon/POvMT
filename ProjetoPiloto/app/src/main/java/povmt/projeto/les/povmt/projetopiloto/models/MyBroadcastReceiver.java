@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import povmt.projeto.les.povmt.projetopiloto.ConfiguracaoActivity;
 import povmt.projeto.les.povmt.projetopiloto.R;
 import povmt.projeto.les.povmt.projetopiloto.views.MainActivity;
 
@@ -16,13 +17,13 @@ public class MyBroadcastReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context pContext, Intent pIntent) {
-        if (pIntent.getAction().equals(MainActivity.ACTION)) {
+        if (pIntent.getAction().equals(ConfiguracaoActivity.ACTION)) {
             Log.d("Alarm Receiver", "onReceive called");
             NotificationCompat.Builder notificationBuilder =
                     (NotificationCompat.Builder) new NotificationCompat.Builder(pContext)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("POvMAT")
-                        .setContentText("Você tem atividades para adicionar o Ti");
+                        .setContentText("Você não adicionou nenhuma Ti ontem!");
             Intent resultIntent = new Intent(pContext, MainActivity.class);
 
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(pContext);

@@ -1,4 +1,5 @@
 package povmt.projeto.les.povmt.projetopiloto.views;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -76,7 +77,7 @@ public class AtividadeActivity extends ActionBarActivity {
 
         spinnerCategoria = (Spinner) findViewById(R.id.sp_categoria);
         categorias = new ArrayList<>();
-        Button atribuiCategoria =  (Button) findViewById(R.id.bt_add_categoria);
+        final Button atribuiCategoria =  (Button) findViewById(R.id.bt_add_categoria);
 
         putCategoryElementsOnSpinnerArray(categorias);
 
@@ -99,8 +100,82 @@ public class AtividadeActivity extends ActionBarActivity {
             public void onNothingSelected(final AdapterView<?> parent) {
             }
         });
+
+        atribuiCategoria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+                cal.clear(Calendar.MINUTE);
+                cal.clear(Calendar.SECOND);
+                cal.clear(Calendar.MILLISECOND);
+                cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+
+                Date dateSem = cal.getTime();
+                String nome = atividade.getNome();
+                SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
+                String dataInicioSemana = format1.format(dateSem);
+                String categoria = selectedCategoria;
+                atribuirCategoria(dataInicioSemana, nome, categoria);
+            }
+        }
+        );
+
+
     }
 
+    private void  atribuirCategoria(String dataInicioSemana, String nome, String categoria){
+        String url = "http://povmt-armq.rhcloud.com/adicionarCategoria";
+        JSONObject json = new JSONObject();
+        try {
+            json.put("usuario", LoginActivity.emailLogado);
+            json.put("dataInicioSemana", dataInicioSemana);
+            json.put("nomeAtividade", nome);
+            json.put("categoria", categoria);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mHttp.post(url, json.toString(), new HttpListener() {
+            @Override
+            public void onSucess(JSONObject result) throws JSONException {
+                if (result.getInt("ok") == 0) {
+                    new AlertDialog.Builder(AtividadeActivity.this)
+                            .setTitle("Erro")
+                            .setMessage(result.getString("msg"))
+                            .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            })
+                            .create()
+                            .show();
+                } else {
+                    new AlertDialog.Builder(AtividadeActivity.this)
+                            .setTitle("Sucesso")
+                            .setMessage("Atribuído uma categoria")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    setView(AtividadeActivity.this, MainActivity.class);
+                                }
+                            })
+                            .create()
+                            .show();
+                }
+            }
+
+            @Override
+            public void onTimeout() {
+                new AlertDialog.Builder(AtividadeActivity.this)
+                        .setTitle("Erro")
+                        .setMessage("Conexão não disponível.")
+                        .setNeutralButton("OK", null)
+                        .create()
+                        .show();
+            }
+        });
+
+    }
     private void registrarTI(int tempo) {
         String url = "http://povmt-armq.rhcloud.com/incrementaTempoInvestido";
         JSONObject json = new JSONObject();

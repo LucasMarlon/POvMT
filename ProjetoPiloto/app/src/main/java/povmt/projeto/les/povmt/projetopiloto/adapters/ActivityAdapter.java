@@ -49,8 +49,13 @@ public class ActivityAdapter extends BaseAdapter {
 
         byte [] fotoByte = item.getFoto();
         Bitmap fotoBitmap = BitmapFactory.decodeByteArray(fotoByte, 0, fotoByte.length);
+        String categoria = "Sem categoria";
+        if (item.getCategoria() != null){
+            categoria = item.getCategoria().getValor();
+        }
 
         ((TextView) convertView.findViewById(R.id.tv_activity_name)).setText(item.getNome());
+        ((TextView) convertView.findViewById(R.id.tv_categoria)).setText(categoria);
         ((ImageView) convertView.findViewById(R.id.iv_foto)).setImageBitmap(fotoBitmap);
         ((ImageView) convertView.findViewById(R.id.iv_foto)).setImageBitmap(Bitmap.createScaledBitmap(fotoBitmap, 100, 100, false));
 
