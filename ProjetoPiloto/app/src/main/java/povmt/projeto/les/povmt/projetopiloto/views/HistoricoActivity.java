@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,7 +30,9 @@ import java.util.List;
 
 import povmt.projeto.les.povmt.projetopiloto.R;
 import povmt.projeto.les.povmt.projetopiloto.models.Atividade;
+import povmt.projeto.les.povmt.projetopiloto.models.CATEGORIA;
 import povmt.projeto.les.povmt.projetopiloto.models.MySharedPreferences;
+import povmt.projeto.les.povmt.projetopiloto.models.PRIORIDADE;
 import povmt.projeto.les.povmt.projetopiloto.models.Semana;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpListener;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpUtils;
@@ -133,7 +138,21 @@ public class HistoricoActivity extends ActionBarActivity {
                             JSONObject obj = array.getJSONObject(i);
                             String nome = obj.getString("nomeAtividade");
                             int tempoInvestido = obj.getInt("tempoInvestido");
-                            Atividade atv = new Atividade(nome, tempoInvestido);
+                            String data = obj.getString("dataAtividade");
+                            String prioridade_value = obj.getString("prioridade");
+                            String categoria_value = obj.getString("categoria");
+                            String fotoString = obj.getString("foto");
+                            PRIORIDADE prioridade = PRIORIDADE.getEnum(prioridade_value);
+                            CATEGORIA categoria = CATEGORIA.getEnum(categoria_value);
+                            byte[] fotoByte = Base64.decode(fotoString, Base64.DEFAULT);
+                            DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            Date dataAtividade = new Date();
+                            try {
+                                dataAtividade = format.parse(data);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            Atividade atv = new Atividade(nome, tempoInvestido, dataAtividade, prioridade, categoria, fotoByte);
                             semanaAnterior.adicionaAtividade(atv);
                         }
                         if(array.length() != 0) {
@@ -219,7 +238,21 @@ public class HistoricoActivity extends ActionBarActivity {
                             JSONObject obj = array.getJSONObject(i);
                             String nome = obj.getString("nomeAtividade");
                             int tempoInvestido = obj.getInt("tempoInvestido");
-                            Atividade atv = new Atividade(nome, tempoInvestido);
+                            String data = obj.getString("dataAtividade");
+                            String prioridade_value = obj.getString("prioridade");
+                            String categoria_value = obj.getString("categoria");
+                            String fotoString = obj.getString("foto");
+                            PRIORIDADE prioridade = PRIORIDADE.getEnum(prioridade_value);
+                            CATEGORIA categoria = CATEGORIA.getEnum(categoria_value);
+                            byte[] fotoByte = Base64.decode(fotoString, Base64.DEFAULT);
+                            DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            Date dataAtividade = new Date();
+                            try {
+                                dataAtividade = format.parse(data);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            Atividade atv = new Atividade(nome, tempoInvestido, dataAtividade, prioridade, categoria, fotoByte);
                             semanaRetrasada.adicionaAtividade(atv);
                         }
                         if(array.length() != 0) {
@@ -275,13 +308,13 @@ public class HistoricoActivity extends ActionBarActivity {
 
         for (int i = atividadesSemana.size()-1; i >= 0; i--) {
             if (atividadesSemana.get(i).getPrioridade().getValor().equals("Alta")){
-                priAlta.add(new BarEntry(this.semana.calculaProporcaoTempoInvestido(atividadesSemana.get(i)), i));
+                priAlta.add(new BarEntry(semana.calculaProporcaoTempoInvestido(atividadesSemana.get(i)), i));
             }
             else if (atividadesSemana.get(i).getPrioridade().getValor().equals("Média")){
-                priMedia.add(new BarEntry(this.semana.calculaProporcaoTempoInvestido(atividadesSemana.get(i)), i));
+                priMedia.add(new BarEntry(semana.calculaProporcaoTempoInvestido(atividadesSemana.get(i)), i));
             }
             else if (atividadesSemana.get(i).getPrioridade().getValor().equals("Baixa")){
-                priBaixa.add(new BarEntry(this.semana.calculaProporcaoTempoInvestido(atividadesSemana.get(i)), i));
+                priBaixa.add(new BarEntry(semana.calculaProporcaoTempoInvestido(atividadesSemana.get(i)), i));
             }
         }
 
