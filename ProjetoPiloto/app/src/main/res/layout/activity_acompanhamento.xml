@@ -14,11 +14,41 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.github.mikephil.charting.charts.HorizontalBarChart
-            android:visibility="invisible"
-            android:id="@+id/chart"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <TabHost
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tabHost"
+            android:layout_gravity="center_horizontal">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
+
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"></TabWidget>
+
+                <FrameLayout
+                    android:id="@android:id/tabcontent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <com.github.mikephil.charting.charts.HorizontalBarChart
+                        android:visibility="invisible"
+                        android:id="@+id/chartPrioridade"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent" />
+
+                    <com.github.mikephil.charting.charts.HorizontalBarChart
+                        android:visibility="invisible"
+                        android:id="@+id/chartCategoria"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent" />
+                </FrameLayout>
+            </LinearLayout>
+        </TabHost>
 
     </LinearLayout>
 

@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -30,7 +31,8 @@ public class AcompanhamentoActivity extends ActionBarActivity {
     private HttpUtils mHttp;
     private Calendar cal = Calendar.getInstance();
     private Semana semanaAtual;
-    private HorizontalBarChart mChart;
+    private HorizontalBarChart mChartPrioridade;
+    private HorizontalBarChart mChartCategoria;
     private TextView tv_total_ti;
     private MySharedPreferences mySharedPreferences;
     private List<Atividade> listaAtividades;
@@ -40,8 +42,24 @@ public class AcompanhamentoActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acompanhamento);
 
+        TabHost mTabHost = (TabHost) findViewById(R.id.tabHost);
+        mTabHost.setup();
+
+        TabHost.TabSpec descritor = mTabHost.newTabSpec("aba1");
+        descritor.setContent(R.id.chartPrioridade);
+        descritor.setIndicator("Prioridade");
+        mTabHost.addTab(descritor);
+
+        descritor = mTabHost.newTabSpec("aba2");
+        descritor.setContent(R.id.chartCategoria);
+        descritor.setIndicator("Categoria");
+        mTabHost.addTab(descritor);
+
+        mTabHost.setCurrentTab(0);
+
         tv_total_ti = (TextView) findViewById(R.id.tv_total_ti);
-        mChart = (HorizontalBarChart) findViewById(R.id.chart);
+        mChartPrioridade = (HorizontalBarChart) findViewById(R.id.chartPrioridade);
+        mChartCategoria = (HorizontalBarChart) findViewById(R.id.chartCategoria);
         mHttp = new HttpUtils(this);
 
         cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
@@ -64,12 +82,14 @@ public class AcompanhamentoActivity extends ActionBarActivity {
             for (Atividade atividade : listaAtividades) {
                 semanaAtual.adicionaAtividade(atividade);
             }
-            preencheGrafico(mChart);
-            mChart.setVisibility(View.VISIBLE);
+            preencheGraficoComPrioridade(mChartPrioridade);
+            mChartPrioridade.setVisibility(View.VISIBLE);
+            preencheGraficoComCategoria(mChartCategoria);
+            mChartCategoria.setVisibility(View.VISIBLE);
         }
     }
 
-    private void preencheGrafico(HorizontalBarChart chart) {
+    private void preencheGraficoComPrioridade(HorizontalBarChart chart) {
 
         ArrayList<BarDataSet> dataSets = new ArrayList<>();
         ArrayList<BarEntry> priAlta = new ArrayList<>();
@@ -114,6 +134,52 @@ public class AcompanhamentoActivity extends ActionBarActivity {
         chart.invalidate();
     }
 
+    private void preencheGraficoComCategoria(HorizontalBarChart chart) {
+
+        ArrayList<BarDataSet> dataSets = new ArrayList<>();
+        ArrayList<BarEntry> cateogriaTrabalho = new ArrayList<>();
+        ArrayList<BarEntry> categoriaLazer = new ArrayList<>();
+        ArrayList<BarEntry> semCategoria = new ArrayList<>();
+
+        List<Atividade> atividadesSemanaAtual = semanaAtual.getAtividadesOrdenadas();
+
+        for (int i = atividadesSemanaAtual.size()-1; i >= 0; i--) {
+            if (atividadesSemanaAtual.get(i).getCategoria() != null){
+                if (atividadesSemanaAtual.get(i).getCategoria().getValor().equals("Trabalho")){
+                    cateogriaTrabalho.add(new BarEntry(semanaAtual.calculaProporcaoTempoInvestido(atividadesSemanaAtual.get(i)), i));
+                }
+                else if (atividadesSemanaAtual.get(i).getCategoria().getValor().equals("Lazer")){
+                    categoriaLazer.add(new BarEntry(semanaAtual.calculaProporcaoTempoInvestido(atividadesSemanaAtual.get(i)), i));
+                }
+            }
+            else {
+                semCategoria.add(new BarEntry(semanaAtual.calculaProporcaoTempoInvestido(atividadesSemanaAtual.get(i)), i));
+            }
+        }
+
+        ArrayList<String> nomeDeAtividades = new ArrayList<String>();
+
+        for (int i = 0; i < atividadesSemanaAtual.size(); i++) {
+            nomeDeAtividades.add(atividadesSemanaAtual.get(i).getNome());
+        }
+
+        BarDataSet barDataSetTrabalho = new BarDataSet(cateogriaTrabalho, "Trabalho - Proporção de TI (%)");
+        barDataSetTrabalho.setColor(Color.rgb(0, 155, 0));
+        BarDataSet barDataSetLazer = new BarDataSet(categoriaLazer, "Lazer");
+        barDataSetLazer.setColor(Color.rgb(255, 0, 0));
+        BarDataSet barDataSetSemCategoria = new BarDataSet(semCategoria, "Sem categoria");
+        barDataSetSemCategoria.setColor(Color.rgb(0, 0, 255));
+
+        dataSets.add(barDataSetSemCategoria);
+        dataSets.add(barDataSetLazer);
+        dataSets.add(barDataSetTrabalho);
+
+        BarData data = new BarData(nomeDeAtividades, dataSets);
+        chart.setData(data);
+        tv_total_ti.setText("Total de TI: " + semanaAtual.calculaTempoTotalInvestido() + "hs");
+        chart.setDescription("");
+        chart.invalidate();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
