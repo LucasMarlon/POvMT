@@ -20,8 +20,10 @@ public class MyBroadcastReceiver extends BroadcastReceiver{
             Log.d("Alarm Receiver", "onReceive called");
             NotificationCompat.Builder notificationBuilder =
                     (NotificationCompat.Builder) new NotificationCompat.Builder(pContext)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.icon_app2)
                         .setContentTitle("POvMAT")
+                            .setSmallIcon(R.drawable.icon_app2, 4)
+
                         .setContentText("Você não adicionou nenhuma Ti ontem!");
             Intent resultIntent = new Intent(pContext, MainActivity.class);
 

@@ -54,6 +54,7 @@ public class MainActivity extends ActionBarActivity {
     Date dataAtividade;
     MySharedPreferences mySharedPreferences;
     Context context;
+    String dataInicioSemana;
     public static final String ACTION = "com.example.android.receivers.NOTIFICATION_ALARM";
 
     @Override
@@ -64,6 +65,7 @@ public class MainActivity extends ActionBarActivity {
         mNavItems = new ArrayList<>();
         setmDrawer(mNavItems);
 
+        notificar(00,22);
 
         no_recorde = (TextView) findViewById(R.id.tv_no_record);
 
@@ -81,7 +83,7 @@ public class MainActivity extends ActionBarActivity {
 
         Date dateSem = cal.getTime();
         SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
-        String dataInicioSemana = format1.format(dateSem);
+        dataInicioSemana = format1.format(dateSem);
         getListaAtividades(dataInicioSemana);
 
         listViewAtividades.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -101,14 +103,23 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        getListaAtividades(dataInicioSemana);
+
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
 
     public void getListaAtividades(final String dataInicioSemana) {
         String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
         final JSONObject json = new JSONObject();
         try {
             json.put("dataInicioSemana", dataInicioSemana);
-            json.put("usuario", LoginActivity.emailLogado);
+           json.put("usuario", LoginActivity.emailLogado);
 
 
         } catch (JSONException e) {
@@ -145,23 +156,12 @@ public class MainActivity extends ActionBarActivity {
                 } else {
                     adapter = new ActivityAdapter(context, listaAtividades);
                     listViewAtividades.setAdapter(adapter);
-//                    Log.d("MAIN", "Tamanho da lista é maior que zero");
-//                    listViewAtividades.setVisibility(View.VISIBLE);
-//                    no_recorde.setVisibility(View.GONE);
-//                    String jsonArrayString = mySharedPreferences.getListaAtividades();
-//                    try {
-//                        JSONArray jsonArray = new JSONArray(jsonArrayString);
-//                        carregaLista(jsonArray);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
+
                 }
             }
         });
 
     }
-
-
 
 
     public void setView(Context context, Class classe) {
@@ -171,10 +171,10 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void setmDrawer(ArrayList<NavItem> mNavItems) {
-        mNavItems.add(new NavItem("Minha semana", R.mipmap.ic_launcher));
-        mNavItems.add(new NavItem("Histórico", R.mipmap.ic_launcher));
-        mNavItems.add(new NavItem("Configuração", R.mipmap.ic_launcher));
-        mNavItems.add(new NavItem("Sair", R.mipmap.ic_launcher));
+        mNavItems.add(new NavItem("Minha semana", R.drawable.semana));
+        mNavItems.add(new NavItem("Histórico", R.drawable.historico));
+        mNavItems.add(new NavItem("Configurações", R.drawable.configuration));
+        mNavItems.add(new NavItem("Sair", R.drawable.logout));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mDrawerPane = (RelativeLayout) findViewById(R.id.drawerPane);
