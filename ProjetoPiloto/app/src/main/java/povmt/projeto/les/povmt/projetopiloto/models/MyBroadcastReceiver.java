@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import povmt.projeto.les.povmt.projetopiloto.ConfiguracaoActivity;
 import povmt.projeto.les.povmt.projetopiloto.R;
 import povmt.projeto.les.povmt.projetopiloto.views.MainActivity;
 
@@ -17,7 +16,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context pContext, Intent pIntent) {
-        if (pIntent.getAction().equals(ConfiguracaoActivity.ACTION)) {
+        if (pIntent.getAction().equals(MainActivity.ACTION)) {
             Log.d("Alarm Receiver", "onReceive called");
             NotificationCompat.Builder notificationBuilder =
                     (NotificationCompat.Builder) new NotificationCompat.Builder(pContext)

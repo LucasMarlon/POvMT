@@ -1,5 +1,7 @@
 package povmt.projeto.les.povmt.projetopiloto.views;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -52,6 +54,7 @@ public class MainActivity extends ActionBarActivity {
     Date dataAtividade;
     MySharedPreferences mySharedPreferences;
     Context context;
+    public static final String ACTION = "com.example.android.receivers.NOTIFICATION_ALARM";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -249,6 +252,27 @@ public class MainActivity extends ActionBarActivity {
 //        );
 //       AppIndex.AppIndexApi.end(client, viewAction);
 //        client.disconnect();
+    }
+
+    public void notificar(int hora, int minuto)
+    {
+        Calendar calNow = Calendar.getInstance();
+        Calendar calSet = (Calendar) calNow.clone();
+        calSet.setTimeInMillis(System.currentTimeMillis());
+        calSet.set(Calendar.HOUR_OF_DAY, hora);
+        calSet.set(Calendar.MINUTE, minuto);
+        calSet.set(Calendar.SECOND, 0);
+        calSet.set(Calendar.MILLISECOND, 0);
+
+        setAlarm(calSet);
+    }
+
+    private void setAlarm(Calendar targetCall)
+    {
+        Intent intent = new Intent(ACTION);
+        PendingIntent pendingintent = PendingIntent.getBroadcast(getBaseContext(), 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCall.getTimeInMillis(), pendingintent);
     }
 }
 

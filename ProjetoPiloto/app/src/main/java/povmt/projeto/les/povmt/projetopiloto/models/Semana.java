@@ -1,17 +1,11 @@
 package povmt.projeto.les.povmt.projetopiloto.models;
 
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Lucas on 08/03/2016.
- */
+
 public class Semana {
 
     private Date dataInicio;

@@ -35,7 +35,7 @@ public class ConfiguracaoActivity extends ActionBarActivity {
     private HttpUtils mHttp;
     private Calendar cal = Calendar.getInstance();
     private boolean foiCadastradoTI;
-    public static final String ACTION = "com.example.android.receivers.NOTIFICATION_ALARM";
+   // public static final String ACTION = "com.example.android.receivers.NOTIFICATION_ALARM";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class ConfiguracaoActivity extends ActionBarActivity {
         foiCadastradoTI = false;
         verificaSeCadastrouTI();
 
-        notificar(00, 37);
+       // notificar(00, 37);
         Log.d("DANI", "NOTI");
 
         switchLembrete = (Switch) findViewById(R.id.switchLembrete);
@@ -79,29 +79,29 @@ public class ConfiguracaoActivity extends ActionBarActivity {
 
 }
 
-    public void notificar(int hora, int minuto)
-    {
-        if (!foiCadastradoTI) {
-
-        }
-        Calendar calNow = Calendar.getInstance();
-        Calendar calSet = (Calendar) calNow.clone();
-        calSet.setTimeInMillis(System.currentTimeMillis());
-        calSet.set(Calendar.HOUR_OF_DAY, hora);
-        calSet.set(Calendar.MINUTE, minuto);
-        calSet.set(Calendar.SECOND, 0);
-        calSet.set(Calendar.MILLISECOND, 0);
-
-        setAlarm(calSet);
-    }
-
-    private void setAlarm(Calendar targetCall)
-    {
-        Intent intent = new Intent(ACTION);
-        PendingIntent pendingintent = PendingIntent.getBroadcast(getBaseContext(), 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCall.getTimeInMillis(), pendingintent);
-    }
+//    public void notificar(int hora, int minuto)
+//    {
+//        if (!foiCadastradoTI) {
+//
+//        }
+//        Calendar calNow = Calendar.getInstance();
+//        Calendar calSet = (Calendar) calNow.clone();
+//        calSet.setTimeInMillis(System.currentTimeMillis());
+//        calSet.set(Calendar.HOUR_OF_DAY, hora);
+//        calSet.set(Calendar.MINUTE, minuto);
+//        calSet.set(Calendar.SECOND, 0);
+//        calSet.set(Calendar.MILLISECOND, 0);
+//
+//        setAlarm(calSet);
+//    }
+//
+//    private void setAlarm(Calendar targetCall)
+//    {
+//        Intent intent = new Intent(ACTION);
+//        PendingIntent pendingintent = PendingIntent.getBroadcast(getBaseContext(), 0, intent, 0);
+//        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+//        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCall.getTimeInMillis(), pendingintent);
+//    }
 
     private void verificaSeCadastrouTI() {
         String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
