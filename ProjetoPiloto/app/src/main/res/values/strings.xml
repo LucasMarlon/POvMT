@@ -30,7 +30,9 @@
     <string name="title_activity_historico">Histórico</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_configuracao">ConfiguracaoActivity</string>
-
-
+    <string name="total_ti">Total de TI: </string>
+    <string name="semana_atual">SEMANA ATUAL</string>
+    <string name="semana_passada">SEMANA PASSADA</string>
+    <string name="semana_retrasada">SEMANA RETRASADA</string>
 
 </resources>

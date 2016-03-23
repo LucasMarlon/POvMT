@@ -35,31 +35,70 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent">
 
-                    <com.github.mikephil.charting.charts.HorizontalBarChart
-                        android:visibility="invisible"
-                        android:id="@+id/chartPrioridade"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent" />
+                    <LinearLayout
+                        android:id="@+id/tab_prioridade2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                    <com.github.mikephil.charting.charts.HorizontalBarChart
-                        android:visibility="invisible"
-                        android:id="@+id/chartCategoria"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent" />
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="430dp"
+                            android:orientation="vertical">
+
+                            <com.github.mikephil.charting.charts.HorizontalBarChart
+                                android:visibility="invisible"
+                                android:id="@+id/chartPrioridade"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/tv_total_ti"
+                            android:layout_gravity="end"
+                            android:textStyle="bold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/total_ti"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/tab_categoria2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="430dp"
+                            android:orientation="vertical">
+
+                            <com.github.mikephil.charting.charts.HorizontalBarChart
+                                android:visibility="invisible"
+                                android:id="@+id/chartCategoria"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/tv_total_ti2"
+                            android:layout_gravity="end"
+                            android:textStyle="bold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/total_ti"
+                            />
+                    </LinearLayout>
+
                 </FrameLayout>
+
             </LinearLayout>
+
         </TabHost>
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_total_ti"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Total de TI: "
-        />
 
 </RelativeLayout>

@@ -9,6 +9,7 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -46,12 +47,18 @@ public class HistoricoActivity extends ActionBarActivity {
     private HorizontalBarChart mChart1;
     private HorizontalBarChart mChart2;
     private HorizontalBarChart mChart3;
+    private HorizontalBarChart mChart4;
+    private HorizontalBarChart mChart5;
+    private HorizontalBarChart mChart6;
     private Semana semana;
     private Semana semanaAnterior;
     private Semana semanaRetrasada;
     private TextView tv_total_ti1;
     private TextView tv_total_ti2;
     private TextView tv_total_ti3;
+    private TextView tv_total_ti4;
+    private TextView tv_total_ti5;
+    private TextView tv_total_ti6;
     private MySharedPreferences mySharedPreferences;
     private List<Atividade> listaAtividadesSemanaAtual;
 
@@ -60,13 +67,33 @@ public class HistoricoActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historico);
 
+        TabHost mTabHost = (TabHost) findViewById(R.id.tabHost);
+        mTabHost.setup();
+
+        TabHost.TabSpec descritor = mTabHost.newTabSpec("aba1");
+        descritor.setContent(R.id.tab_prioridade);
+        descritor.setIndicator("Prioridade");
+        mTabHost.addTab(descritor);
+
+        descritor = mTabHost.newTabSpec("aba2");
+        descritor.setContent(R.id.tab_categoria);
+        descritor.setIndicator("Categoria");
+        mTabHost.addTab(descritor);
+
+
         tv_total_ti1 = (TextView) findViewById(R.id.tv_total_ti1);
         tv_total_ti2 = (TextView) findViewById(R.id.tv_total_ti2);
         tv_total_ti3 = (TextView) findViewById(R.id.tv_total_ti3);
+        tv_total_ti4 = (TextView) findViewById(R.id.tv_total_ti4);
+        tv_total_ti5 = (TextView) findViewById(R.id.tv_total_ti5);
+        tv_total_ti6 = (TextView) findViewById(R.id.tv_total_ti6);
 
         mChart1 = (HorizontalBarChart) findViewById(R.id.chart1);
         mChart2 = (HorizontalBarChart) findViewById(R.id.chart2);
         mChart3 = (HorizontalBarChart) findViewById(R.id.chart3);
+        mChart4 = (HorizontalBarChart) findViewById(R.id.chart4);
+        mChart5 = (HorizontalBarChart) findViewById(R.id.chart5);
+        mChart6 = (HorizontalBarChart) findViewById(R.id.chart6);
 
         mHttp = new HttpUtils(this);
 
@@ -91,8 +118,10 @@ public class HistoricoActivity extends ActionBarActivity {
             for (Atividade atividade : listaAtividadesSemanaAtual) {
                 semana.adicionaAtividade(atividade);
             }
-            preencheGrafico(mChart1, semana, tv_total_ti1);
+            preencheGraficoComPrioridade(mChart1, semana, tv_total_ti1);
             mChart1.setVisibility(View.VISIBLE);
+            preencheGraficoComCategoria(mChart4, semana, tv_total_ti4);
+            mChart4.setVisibility(View.VISIBLE);
         }
 
         String url = "http://povmt-armq.rhcloud.com/findAtividadesSemana";
@@ -156,8 +185,10 @@ public class HistoricoActivity extends ActionBarActivity {
                             semanaAnterior.adicionaAtividade(atv);
                         }
                         if(array.length() != 0) {
-                            preencheGrafico(mChart2, semanaAnterior, tv_total_ti2);
+                            preencheGraficoComPrioridade(mChart2, semanaAnterior, tv_total_ti2);
                             mChart2.setVisibility(View.VISIBLE);
+                            preencheGraficoComCategoria(mChart5, semanaAnterior, tv_total_ti5);
+                            mChart5.setVisibility(View.VISIBLE);
                         } else {
                             new AlertDialog.Builder(HistoricoActivity.this)
                                     .setTitle("HISTÓRICO")
@@ -256,8 +287,10 @@ public class HistoricoActivity extends ActionBarActivity {
                             semanaRetrasada.adicionaAtividade(atv);
                         }
                         if(array.length() != 0) {
-                            preencheGrafico(mChart3, semanaRetrasada, tv_total_ti3);
+                            preencheGraficoComPrioridade(mChart3, semanaRetrasada, tv_total_ti3);
                             mChart3.setVisibility(View.VISIBLE);
+                            preencheGraficoComCategoria(mChart6, semanaRetrasada, tv_total_ti6);
+                            mChart6.setVisibility(View.VISIBLE);
                         } else {
                             new AlertDialog.Builder(HistoricoActivity.this)
                                     .setTitle("HISTÓRICO")
@@ -298,7 +331,7 @@ public class HistoricoActivity extends ActionBarActivity {
 
     }
 
-    private void preencheGrafico(HorizontalBarChart chart, Semana semana, TextView tv_total_ti) {
+    private void preencheGraficoComPrioridade(HorizontalBarChart chart, Semana semana, TextView tv_total_ti) {
         ArrayList<BarDataSet> dataSets = new ArrayList<>();
         ArrayList<BarEntry> priAlta = new ArrayList<>();
         ArrayList<BarEntry> priMedia = new ArrayList<>();
@@ -328,12 +361,59 @@ public class HistoricoActivity extends ActionBarActivity {
         barDataSetAlta.setColor(Color.rgb(0, 155, 0));
         BarDataSet barDataSetMedia = new BarDataSet(priMedia, "Média");
         barDataSetMedia.setColor(Color.rgb(255, 0, 0));
-        BarDataSet barDataSetBaixa = new BarDataSet(priBaixa, "Prioridade Baixa");
+        BarDataSet barDataSetBaixa = new BarDataSet(priBaixa, "Baixa");
         barDataSetBaixa.setColor(Color.rgb(0, 0, 255));
 
         dataSets.add(barDataSetBaixa);
         dataSets.add(barDataSetMedia);
         dataSets.add(barDataSetAlta);
+
+        BarData data = new BarData(nomeDeAtividades, dataSets);
+        chart.setData(data);
+        tv_total_ti.setText("Total de TI: " + semana.calculaTempoTotalInvestido() + "hs");
+        chart.setDescription("");
+        chart.invalidate();
+
+    }
+
+    private void preencheGraficoComCategoria(HorizontalBarChart chart, Semana semana, TextView tv_total_ti) {
+        ArrayList<BarDataSet> dataSets = new ArrayList<>();
+        ArrayList<BarEntry> cateogriaTrabalho = new ArrayList<>();
+        ArrayList<BarEntry> categoriaLazer = new ArrayList<>();
+        ArrayList<BarEntry> semCategoria = new ArrayList<>();
+
+        List<Atividade> atividadesSemana = semana.getAtividadesOrdenadas();
+
+        for (int i = atividadesSemana.size()-1; i >= 0; i--) {
+            if (atividadesSemana.get(i).getCategoria() != null){
+                if (atividadesSemana.get(i).getCategoria().getValor().equals("Trabalho")){
+                    cateogriaTrabalho.add(new BarEntry(semana.calculaProporcaoTempoInvestido(atividadesSemana.get(i)), i));
+                }
+                else if (atividadesSemana.get(i).getCategoria().getValor().equals("Lazer")){
+                    categoriaLazer.add(new BarEntry(semana.calculaProporcaoTempoInvestido(atividadesSemana.get(i)), i));
+                }
+            }
+            else {
+                semCategoria.add(new BarEntry(semana.calculaProporcaoTempoInvestido(atividadesSemana.get(i)), i));
+            }
+        }
+
+        ArrayList<String> nomeDeAtividades = new ArrayList<String>();
+
+        for (int i = 0; i < atividadesSemana.size(); i++) {
+            nomeDeAtividades.add(atividadesSemana.get(i).getNome());
+        }
+
+        BarDataSet barDataSetTrabalho = new BarDataSet(cateogriaTrabalho, "Trabalho - Proporção de TI (%)");
+        barDataSetTrabalho.setColor(Color.rgb(255, 128, 0));
+        BarDataSet barDataSetLazer = new BarDataSet(categoriaLazer, "Lazer");
+        barDataSetLazer.setColor(Color.rgb(153, 0, 153));
+        BarDataSet barDataSetSemCategoria = new BarDataSet(semCategoria, "Sem categoria");
+        barDataSetSemCategoria.setColor(Color.rgb(255, 255, 0));
+
+        dataSets.add(barDataSetSemCategoria);
+        dataSets.add(barDataSetLazer);
+        dataSets.add(barDataSetTrabalho);
 
         BarData data = new BarData(nomeDeAtividades, dataSets);
         chart.setData(data);

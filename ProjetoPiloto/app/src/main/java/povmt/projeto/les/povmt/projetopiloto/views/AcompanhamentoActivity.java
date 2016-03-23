@@ -34,6 +34,7 @@ public class AcompanhamentoActivity extends ActionBarActivity {
     private HorizontalBarChart mChartPrioridade;
     private HorizontalBarChart mChartCategoria;
     private TextView tv_total_ti;
+    private TextView tv_total_ti2;
     private MySharedPreferences mySharedPreferences;
     private List<Atividade> listaAtividades;
 
@@ -46,18 +47,17 @@ public class AcompanhamentoActivity extends ActionBarActivity {
         mTabHost.setup();
 
         TabHost.TabSpec descritor = mTabHost.newTabSpec("aba1");
-        descritor.setContent(R.id.chartPrioridade);
+        descritor.setContent(R.id.tab_prioridade2);
         descritor.setIndicator("Prioridade");
         mTabHost.addTab(descritor);
 
         descritor = mTabHost.newTabSpec("aba2");
-        descritor.setContent(R.id.chartCategoria);
+        descritor.setContent(R.id.tab_categoria2);
         descritor.setIndicator("Categoria");
         mTabHost.addTab(descritor);
 
-        mTabHost.setCurrentTab(0);
-
         tv_total_ti = (TextView) findViewById(R.id.tv_total_ti);
+        tv_total_ti2 = (TextView) findViewById(R.id.tv_total_ti2);
         mChartPrioridade = (HorizontalBarChart) findViewById(R.id.chartPrioridade);
         mChartCategoria = (HorizontalBarChart) findViewById(R.id.chartCategoria);
         mHttp = new HttpUtils(this);
@@ -120,7 +120,7 @@ public class AcompanhamentoActivity extends ActionBarActivity {
         barDataSetAlta.setColor(Color.rgb(0, 155, 0));
         BarDataSet barDataSetMedia = new BarDataSet(priMedia, "Média");
         barDataSetMedia.setColor(Color.rgb(255, 0, 0));
-        BarDataSet barDataSetBaixa = new BarDataSet(priBaixa, "Prioridade Baixa");
+        BarDataSet barDataSetBaixa = new BarDataSet(priBaixa, "Baixa");
         barDataSetBaixa.setColor(Color.rgb(0, 0, 255));
 
         dataSets.add(barDataSetBaixa);
@@ -164,11 +164,11 @@ public class AcompanhamentoActivity extends ActionBarActivity {
         }
 
         BarDataSet barDataSetTrabalho = new BarDataSet(cateogriaTrabalho, "Trabalho - Proporção de TI (%)");
-        barDataSetTrabalho.setColor(Color.rgb(0, 155, 0));
+        barDataSetTrabalho.setColor(Color.rgb(255, 128, 0));
         BarDataSet barDataSetLazer = new BarDataSet(categoriaLazer, "Lazer");
-        barDataSetLazer.setColor(Color.rgb(255, 0, 0));
+        barDataSetLazer.setColor(Color.rgb(153, 0, 153));
         BarDataSet barDataSetSemCategoria = new BarDataSet(semCategoria, "Sem categoria");
-        barDataSetSemCategoria.setColor(Color.rgb(0, 0, 255));
+        barDataSetSemCategoria.setColor(Color.rgb(255, 255, 0));
 
         dataSets.add(barDataSetSemCategoria);
         dataSets.add(barDataSetLazer);
@@ -176,7 +176,7 @@ public class AcompanhamentoActivity extends ActionBarActivity {
 
         BarData data = new BarData(nomeDeAtividades, dataSets);
         chart.setData(data);
-        tv_total_ti.setText("Total de TI: " + semanaAtual.calculaTempoTotalInvestido() + "hs");
+        tv_total_ti2.setText("Total de TI: " + semanaAtual.calculaTempoTotalInvestido() + "hs");
         chart.setDescription("");
         chart.invalidate();
     }
