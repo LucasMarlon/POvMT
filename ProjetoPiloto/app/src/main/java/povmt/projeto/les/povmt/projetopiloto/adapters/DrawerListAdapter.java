@@ -56,7 +56,7 @@ public class DrawerListAdapter extends BaseAdapter {
         ImageView iconView = (ImageView) view.findViewById(R.id.icon);
 
         titleView.setText((CharSequence) mNavItems.get(position).mTitle);
-        iconView.setImageResource(mNavItems.get(position).mIcon);
+        //iconView.setImageResource(mNavItems.get(position).mIcon);
 
         return view;
     }
