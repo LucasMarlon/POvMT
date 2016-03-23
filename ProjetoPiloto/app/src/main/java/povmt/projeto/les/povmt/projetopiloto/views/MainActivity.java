@@ -27,7 +27,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import povmt.projeto.les.povmt.projetopiloto.ConfiguracaoActivity;
 import povmt.projeto.les.povmt.projetopiloto.R;
 import povmt.projeto.les.povmt.projetopiloto.adapters.ActivityAdapter;
 import povmt.projeto.les.povmt.projetopiloto.adapters.DrawerListAdapter;

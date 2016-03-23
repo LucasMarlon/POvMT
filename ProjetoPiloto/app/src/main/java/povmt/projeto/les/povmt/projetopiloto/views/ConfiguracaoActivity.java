@@ -1,4 +1,4 @@
-package povmt.projeto.les.povmt.projetopiloto;
+package povmt.projeto.les.povmt.projetopiloto.views;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,7 +8,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TimePicker;
 
@@ -21,10 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import povmt.projeto.les.povmt.projetopiloto.R;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpListener;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpUtils;
-import povmt.projeto.les.povmt.projetopiloto.views.LoginActivity;
-
 
 public class ConfiguracaoActivity extends ActionBarActivity {
 
@@ -33,6 +35,9 @@ public class ConfiguracaoActivity extends ActionBarActivity {
     private HttpUtils mHttp;
     private Calendar cal = Calendar.getInstance();
     private boolean foiCadastradoTI;
+    private EditText et_hora;
+    private EditText et_minuto;
+    private Button bt_alterar_horario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +48,46 @@ public class ConfiguracaoActivity extends ActionBarActivity {
         foiCadastradoTI = false;
         verificaSeCadastrouTI();
 
-       // notificar(00, 37);
+        et_hora = (EditText) findViewById(R.id.et_hora);
+        et_minuto = (EditText) findViewById(R.id.et_minuto);
+        switchLembrete = (Switch) findViewById(R.id.switchLembrete);
+        bt_alterar_horario = (Button) findViewById(R.id.bt_alterar_horario);
+
+        switchLembrete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    et_hora.setEnabled(true);
+                    et_minuto.setEnabled(true);
+                } else {
+                    et_hora.setEnabled(false);
+                    et_minuto.setEnabled(false);
+                }
+
+            }
+        });
+
+        if(switchLembrete.isChecked()){
+            et_hora.setEnabled(true);
+            et_minuto.setEnabled(true);
+        }
+        else {
+            et_hora.setEnabled(false);
+            et_minuto.setEnabled(false);
+        }
+
+        bt_alterar_horario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        // notificar(00, 37);
         Log.d("DANI", "NOTI");
 
+        /*
         switchLembrete = (Switch) findViewById(R.id.switchLembrete);
         tp_hora_notificacao = (TimePicker) findViewById(R.id.tp_hora_notificacao);
 
@@ -73,7 +115,7 @@ public class ConfiguracaoActivity extends ActionBarActivity {
             tp_hora_notificacao.setEnabled(false);
         }
 
-
+        */
 }
 
 //    public void notificar(int hora, int minuto)
