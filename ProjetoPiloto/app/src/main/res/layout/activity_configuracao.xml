@@ -73,6 +73,7 @@
         android:id="@+id/hotario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/tv_horario_text"
         android:orientation="horizontal">
 
@@ -108,6 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/hotario"
         android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:id="@+id/linearLayout">
 
@@ -152,6 +154,7 @@
         android:background="@color/teal"
         android:textColor="@color/white"
         android:padding="10dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/linearLayout"
         android:layout_alignStart="@+id/linearLayout"
     />

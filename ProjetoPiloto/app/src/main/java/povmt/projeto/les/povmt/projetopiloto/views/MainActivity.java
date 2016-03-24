@@ -66,7 +66,7 @@ public class MainActivity extends ActionBarActivity {
         setmDrawer(mNavItems);
 
         if (!ConfiguracaoActivity.isNotificacaoAtiva) {
-            notificar(01, 22);
+            notificar(9, 45);
         }
         
 
