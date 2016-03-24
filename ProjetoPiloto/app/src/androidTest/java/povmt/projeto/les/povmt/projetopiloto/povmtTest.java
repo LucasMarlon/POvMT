@@ -8,16 +8,19 @@ import java.util.Date;
 import java.util.List;
 
 import povmt.projeto.les.povmt.projetopiloto.models.Atividade;
+import povmt.projeto.les.povmt.projetopiloto.models.CATEGORIA;
+import povmt.projeto.les.povmt.projetopiloto.models.PRIORIDADE;
 import povmt.projeto.les.povmt.projetopiloto.models.Semana;
 
 public class povmtTest extends TestCase {
 
     List<Atividade> listaAtividade;
+    Atividade atv1;
     Semana semana1;
 
     Calendar cal = Calendar.getInstance();
     @Override
-    protected final void setUp() {
+    protected final void setUp() throws Exception {
 
         listaAtividade = new ArrayList<>();
 
@@ -29,6 +32,7 @@ public class povmtTest extends TestCase {
 
         Date data = cal.getTime();
         semana1 = new Semana(data);
+        atv1 = new Atividade("Estudar, estudar e estudar", 0, data, PRIORIDADE.ALTA, CATEGORIA.TRABALHO, null);
     }
 
     //Testa criar atividade
@@ -44,7 +48,7 @@ public class povmtTest extends TestCase {
 
         c.setTime(dt);
         assertEquals(c.get(Calendar.DATE), 20); // primeiro dia  da semana atual
-        //assertEquals(c.get(Calendar.MONTH), 3); //Mês da semana atual (FALHOU)
+        assertEquals(c.get(Calendar.MONTH), 2); //Mês da semana atual
         assertEquals(c.get(Calendar.YEAR), 2016); //Ano da semana atual
 
         //...
