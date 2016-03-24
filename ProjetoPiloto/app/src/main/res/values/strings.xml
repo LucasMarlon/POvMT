@@ -29,10 +29,14 @@
     <string name="nova_atividade">Registrar atividade</string>
     <string name="title_activity_historico">Histórico</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_configuracao">ConfiguracaoActivity</string>
+    <string name="title_activity_configuracao">Configurações</string>
     <string name="total_ti">Total de TI: </string>
     <string name="semana_atual">SEMANA ATUAL</string>
     <string name="semana_passada">SEMANA PASSADA</string>
     <string name="semana_retrasada">SEMANA RETRASADA</string>
+
+    <!-- Configurações -->
+    <string name="bloq_notificacao">Notificação</string>
+    <string name="msg_notificacao">Bloqueia notificações do aplicativo e você não receberá mais lembretes para inserir tempo investido em suas atividades</string>
 
 </resources>

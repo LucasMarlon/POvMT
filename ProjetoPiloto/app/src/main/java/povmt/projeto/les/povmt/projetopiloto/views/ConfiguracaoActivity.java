@@ -5,12 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TimePicker;
@@ -25,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import povmt.projeto.les.povmt.projetopiloto.R;
+import povmt.projeto.les.povmt.projetopiloto.models.MySharedPreferences;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpListener;
 import povmt.projeto.les.povmt.projetopiloto.utils.HttpUtils;
 
@@ -37,7 +37,12 @@ public class ConfiguracaoActivity extends ActionBarActivity {
     private boolean foiCadastradoTI;
     private EditText et_hora;
     private EditText et_minuto;
+    public static int hora;
+    public static int minuto;
+
     private Button bt_alterar_horario;
+    public static boolean isNotificacaoAtiva = true;
+    private MySharedPreferences mySharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,47 +50,73 @@ public class ConfiguracaoActivity extends ActionBarActivity {
         setContentView(R.layout.activity_configuracao);
 
         mHttp = new HttpUtils(this);
-        foiCadastradoTI = false;
+       foiCadastradoTI = false;
         verificaSeCadastrouTI();
 
-        et_hora = (EditText) findViewById(R.id.et_hora);
+        mySharedPreferences = new MySharedPreferences(getApplicationContext());
+
+       et_hora = (EditText) findViewById(R.id.et_hora);
         et_minuto = (EditText) findViewById(R.id.et_minuto);
-        switchLembrete = (Switch) findViewById(R.id.switchLembrete);
-        bt_alterar_horario = (Button) findViewById(R.id.bt_alterar_horario);
 
-        switchLembrete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
+       final CheckBox myCheckbox = (CheckBox)findViewById(R.id.checkBox);
+
+        boolean value = mySharedPreferences.recuperaCheckboxValue();
+
+        myCheckbox.setChecked(value);
+
+
+        myCheckbox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    et_hora.setEnabled(true);
-                    et_minuto.setEnabled(true);
+            public void onClick(View v) {
+                if (!((CheckBox) v).isChecked()) {
+                    isNotificacaoAtiva = false;
+                    ((CheckBox) v).setChecked(false);
+                    mySharedPreferences.guardaCheckboxValue(false);
                 } else {
-                    et_hora.setEnabled(false);
-                    et_minuto.setEnabled(false);
+                    isNotificacaoAtiva = true;
+                    ((CheckBox) v).setChecked(true);
+                    mySharedPreferences.guardaCheckboxValue(true);
                 }
-
             }
         });
 
-        if(switchLembrete.isChecked()){
-            et_hora.setEnabled(true);
-            et_minuto.setEnabled(true);
-        }
-        else {
-            et_hora.setEnabled(false);
-            et_minuto.setEnabled(false);
-        }
 
-        bt_alterar_horario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+//        if (isNotificacaoAtiva){
+//            Log.d("TESTE_DANI", "Notificação ativada");
+//
+//        }
+//        switchLembrete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (isChecked) {
+//                    et_hora.setEnabled(true);
+//                    et_minuto.setEnabled(true);
+//                } else {
+//                    et_hora.setEnabled(false);
+//                    et_minuto.setEnabled(false);
+//                }
+//
+//            }
+//        });
+//
+//        if(switchLembrete.isChecked()){
+//            et_hora.setEnabled(true);
+//            et_minuto.setEnabled(true);
+//        }
+//        else {
+//            et_hora.setEnabled(false);
+//            et_minuto.setEnabled(false);
+//        }
+//
+//        bt_alterar_horario.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
 
-            }
-        });
-
-        // notificar(00, 37);
-        Log.d("DANI", "NOTI");
 
         /*
         switchLembrete = (Switch) findViewById(R.id.switchLembrete);

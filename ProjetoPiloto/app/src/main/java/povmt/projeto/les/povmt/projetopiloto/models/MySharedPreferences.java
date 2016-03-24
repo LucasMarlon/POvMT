@@ -26,6 +26,7 @@ public class MySharedPreferences {
     List<Atividade> listaAtividades;
     private static final String PREFER_NAME = "Pref";
     public static final String KEY_LISTA_ATIVIDADES = "lista_atividades";
+    public static final String KEY_CHECKBOX_VALUE = "checkbox_value";
 
 
     public MySharedPreferences(Context context) {
@@ -40,6 +41,16 @@ public class MySharedPreferences {
         editor.commit();
     }
 
+    public void guardaCheckboxValue(boolean value){
+        editor.putBoolean(KEY_CHECKBOX_VALUE, value);
+        editor.commit();
+    }
+
+    public boolean recuperaCheckboxValue(){
+        boolean value = pref.getBoolean(KEY_CHECKBOX_VALUE, true);
+
+        return value;
+    }
 
     public List<Atividade> getListAtividades() {
         String jsonArrayString = pref.getString(KEY_LISTA_ATIVIDADES, "");

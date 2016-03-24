@@ -1,6 +1,7 @@
 package povmt.projeto.les.povmt.projetopiloto.views;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -50,7 +51,6 @@ public class MainActivity extends ActionBarActivity {
     private HttpUtils mHttp;
     private Calendar cal = Calendar.getInstance();
     Date data;
-    Date dataAtividade;
     MySharedPreferences mySharedPreferences;
     Context context;
     String dataInicioSemana;
@@ -61,10 +61,14 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
         mNavItems = new ArrayList<>();
         setmDrawer(mNavItems);
 
-        notificar(00,22);
+        if (!ConfiguracaoActivity.isNotificacaoAtiva) {
+            notificar(01, 22);
+        }
+        
 
         no_recorde = (TextView) findViewById(R.id.tv_no_record);
 
